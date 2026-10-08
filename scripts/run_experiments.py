@@ -86,7 +86,7 @@ def main(args):
         selected_subset='first 5000 train / first 1000 official test, shuffle train each epoch',
         seed=12345, learning_rate=0.01, epochs=args.epochs, repetitions=args.repeats,
         order_seed=20261008, timing='steady_clock; sum of epoch training windows; excludes evaluation and startup',
-        pop_timing='input pop duration across entire worker lifetime, includes epoch evaluation gaps; not CPU utilization',
+        pop_timing='mutex acquisition and predicate wait, before deque removal; accumulated across worker lifetime and can include evaluation gaps; not CPU utilization',
         affinity='not pinned', background_load='not controlled or measured', commands=commands)
     (target / 'metadata.json').write_text(json.dumps(metadata, indent=2), encoding='utf-8')
 

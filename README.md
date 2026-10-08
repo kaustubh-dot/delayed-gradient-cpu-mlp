@@ -15,7 +15,7 @@ The original team's source code was unavailable. The code here is a documented r
 | Supplied five-epoch CSVs | 28.279 s, 91.4% final accuracy | 20.521 s, 91.6% final accuracy | Observed 1.38x ratio of mean times; original build/hardware unknown |
 | Fresh reference, three runs each | 0.758 s, 91.8% | 0.819 s, 90.8% | Delay 4 does not beat optimized sequential on average |
 
-Fresh synchronous workers average 2.558 s. Delay 4 is faster than that worker handshake, with a descriptive 3.13x ratio. Fresh delays 0, 1, and 2 fail to reach 90% in all three five-epoch runs. Delay 4, 8, and 16 reach the target, but sequential reaches it sooner on average.
+Fresh synchronous workers average 2.558 s. Delay 4 is faster than that worker handshake, with a descriptive 3.125x ratio (the unrounded ratio is 3.124716). Fresh delays 0, 1, and 2 fail to reach 90% in all three five-epoch runs. Delay 4, 8, and 16 reach the target, but sequential reaches it sooner on average.
 
 These are workload-specific observations. Rejecting gradients also skips hidden update computation. Completed examples/second must be read with acceptance, test quality, and time to target. No universally optimal delay or general CPU speedup is established.
 
@@ -90,6 +90,7 @@ python -m pip install -r requirements.txt
 python scripts/audit_supplied.py
 python scripts/run_experiments.py --output results/reproduction --repeats 3 --epochs 5
 python scripts/plot_results.py
+python scripts/audit_claims.py
 python scripts/verify_submission.py
 ```
 
@@ -118,7 +119,9 @@ The compiled submission uses the standard IEEEtran conference class. Tables are 
 
 ## Limitations
 
-The original source and environment are missing, and its timing headings are swapped. A corrected derived log uses numeric configuration fields; the raw evidence remains intact. Fresh measurements use one laptop, no pinned affinity, uncontrolled background load, one initialization seed, and only three scheduling repetitions. Time to 90% is observed at drained epoch checkpoints and excludes evaluation time. Worker pop durations include evaluation/startup/drain gaps and are not CPU utilization. Maximum queue depth is not a time-weighted distribution. Memory payload sizes in the paper are calculated, not resident-memory measurements. This is a small systems prototype, not a state-of-the-art MNIST classifier.
+The original source and environment are missing, and its timing headings are swapped. A corrected derived log uses numeric configuration fields; the raw evidence remains intact. Fresh measurements use one laptop, no pinned affinity, uncontrolled background load, one initialization seed, and only three scheduling repetitions. Time to 90% is observed at drained epoch checkpoints and excludes evaluation time. Fresh queue timers stop after mutex acquisition/predicate waiting, before deque mutation; pop counters can include evaluation/startup/drain gaps and are not CPU utilization. Exact original timer boundaries remain unverified. Maximum queue depth is not a time-weighted distribution. Memory payload sizes in the paper are calculated, not resident-memory measurements. This is a small systems prototype, not a state-of-the-art MNIST classifier.
+
+The preserved guides and presentation are historical material. Their claims about an earlier project folder or implementation are not proof that those files were supplied here. Use the report and [second-pass claim audit](docs/claim_audit.md) for the corrected submission claims.
 
 For eight in-flight examples, the single-output FIFO protocol bounds observed age by seven. Delay 8 and 16 therefore have equivalent acceptance policies here; differences between runs reflect scheduling rather than a meaningful acceptance-bound change.
 

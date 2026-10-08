@@ -98,7 +98,7 @@ def architecture():
         ax.text(x+w/2,y+h/2,text,ha='center',va='center',fontsize=9)
     box(.1,1.15,1.75,1.2,'Coordinator\nwindow I\nepoch drain','#eeeeee')
     box(2.4,1.15,1.45,1.2,'Mixed inbox\nTrain / Grad\ncapacity 2I','#DDF3DE')
-    box(4.3,1.15,1.8,1.2,'Worker 0\n784 -> 32\nsole hidden owner\ncache: x / mask','#d8e8fa')
+    box(4.3,1.15,1.8,1.2,'Worker 0\n784 -> 32\nsole hidden owner\ncache: index / h','#d8e8fa')
     box(7.85,1.15,1.95,1.2,'Worker 1\n32 -> 10\nsole output owner','#F6CFCB')
     ax.annotate('',xy=(2.35,1.75),xytext=(1.9,1.75),arrowprops={'arrowstyle':'->','color':'black'})
     ax.annotate('',xy=(4.25,1.75),xytext=(3.9,1.75),arrowprops={'arrowstyle':'->','color':'black'})

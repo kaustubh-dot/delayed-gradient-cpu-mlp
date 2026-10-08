@@ -26,7 +26,9 @@ class RuntimeTests(unittest.TestCase):
                 (d / (prefix + '-labels-idx1-ubyte')).write_bytes(struct.pack('>II', 2049, n) + labels)
             r = subprocess.run([str(EXE), '--mode', mode, '--tau', str(tau), '--in-flight', str(window), '--epochs', '2', '--train', '40', '--test', '40', '--data', str(d)], capture_output=True, text=True, timeout=30)
             self.assertEqual(r.returncode, 0, r.stderr)
-            return list(csv.DictReader(io.StringIO(r.stdout)))
+            rows = list(csv.DictReader(io.StringIO(r.stdout)))
+            self.assertEqual([int(row['epoch']) for row in rows], [1, 2], 'Missing or misordered checkpoint rows')
+            return rows
 
     def test_math_and_queue_contracts(self):
         r = subprocess.run([str(EXE), '--self-test'], capture_output=True, text=True, timeout=30)

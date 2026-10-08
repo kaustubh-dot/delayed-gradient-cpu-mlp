@@ -1,5 +1,5 @@
 {
-  "verified_local_date": "2026-10-08",
+  "verified_local_date": "2026-10-09",
   "source_status": "Documented reference reconstruction; original source unavailable",
   "pdf_pages_including_figures_and_references": 14,
   "visually_inspected_pages": 14,
@@ -12,7 +12,7 @@
   "fresh_runs": 24,
   "fresh_epoch_rows": 120,
   "integration_tests": "4 passed",
-  "self_test": "Finite-difference derivatives, stable loss, age policy, queue close/drain/wakeup passed",
+  "self_test": "Finite-difference derivatives, stable loss, age policy, queue close/drain and concurrent closure contracts passed; forced preblocked wakeup not established",
   "data_audit": "Supplied hashes, workbook consistency, target checkpoints, raw/fresh summary agreement passed",
   "source_hash_check": "Matches fresh experiment metadata",
   "public_exclusions": "No dataset, executable, compiler temporary files, credentials, or machine-specific paths",

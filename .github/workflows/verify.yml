@@ -13,4 +13,5 @@ jobs:
       - run: ./build/mlp --self-test
       - run: python -m unittest discover -s tests
       - run: python scripts/audit_supplied.py
+      - run: python scripts/audit_claims.py
       - run: python scripts/verify_submission.py

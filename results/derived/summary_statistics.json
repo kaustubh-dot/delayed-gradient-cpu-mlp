@@ -1,0 +1,411 @@
+{
+  "supplied": {
+    "sequential/NA": {
+      "n": 2,
+      "total_training_seconds": {
+        "mean": 28.2785375,
+        "min": 26.922346,
+        "max": 29.634729,
+        "n_reached": 2
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 2
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.4,
+        "min": 91.4,
+        "max": 91.4,
+        "n_reached": 2
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 11.128177,
+        "min": 10.876547,
+        "max": 11.379807,
+        "n_reached": 2
+      }
+    },
+    "synchronous/0": {
+      "n": 1,
+      "total_training_seconds": {
+        "mean": 28.614219,
+        "min": 28.614219,
+        "max": 28.614219,
+        "n_reached": 1
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 1
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.4,
+        "min": 91.4,
+        "max": 91.4,
+        "n_reached": 1
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 11.535596,
+        "min": 11.535596,
+        "max": 11.535596,
+        "n_reached": 1
+      }
+    },
+    "delayed/0": {
+      "n": 1,
+      "total_training_seconds": {
+        "mean": 9.997318,
+        "min": 9.997318,
+        "max": 9.997318,
+        "n_reached": 1
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 12.5,
+        "min": 12.5,
+        "max": 12.5,
+        "n_reached": 1
+      },
+      "final_test_accuracy_percent": {
+        "mean": 88.9,
+        "min": 88.9,
+        "max": 88.9,
+        "n_reached": 1
+      },
+      "time_to_90_percent_seconds": {
+        "mean": null,
+        "min": null,
+        "max": null,
+        "n_reached": 0
+      }
+    },
+    "delayed/1": {
+      "n": 1,
+      "total_training_seconds": {
+        "mean": 11.182586,
+        "min": 11.182586,
+        "max": 11.182586,
+        "n_reached": 1
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 27.168,
+        "min": 27.168,
+        "max": 27.168,
+        "n_reached": 1
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.1,
+        "min": 91.1,
+        "max": 91.1,
+        "n_reached": 1
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 11.182586,
+        "min": 11.182586,
+        "max": 11.182586,
+        "n_reached": 1
+      }
+    },
+    "delayed/2": {
+      "n": 1,
+      "total_training_seconds": {
+        "mean": 15.757172,
+        "min": 15.757172,
+        "max": 15.757172,
+        "n_reached": 1
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 47.968,
+        "min": 47.968,
+        "max": 47.968,
+        "n_reached": 1
+      },
+      "final_test_accuracy_percent": {
+        "mean": 90.5,
+        "min": 90.5,
+        "max": 90.5,
+        "n_reached": 1
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 12.709554,
+        "min": 12.709554,
+        "max": 12.709554,
+        "n_reached": 1
+      }
+    },
+    "delayed/4": {
+      "n": 2,
+      "total_training_seconds": {
+        "mean": 20.52111,
+        "min": 19.905946,
+        "max": 21.136274,
+        "n_reached": 2
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 70.28,
+        "min": 69.16,
+        "max": 71.4,
+        "n_reached": 2
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.6,
+        "min": 91.1,
+        "max": 92.1,
+        "n_reached": 2
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 8.2674655,
+        "min": 8.016217,
+        "max": 8.518714,
+        "n_reached": 2
+      }
+    },
+    "delayed/8": {
+      "n": 1,
+      "total_training_seconds": {
+        "mean": 26.583509,
+        "min": 26.583509,
+        "max": 26.583509,
+        "n_reached": 1
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 1
+      },
+      "final_test_accuracy_percent": {
+        "mean": 92.2,
+        "min": 92.2,
+        "max": 92.2,
+        "n_reached": 1
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 10.756197,
+        "min": 10.756197,
+        "max": 10.756197,
+        "n_reached": 1
+      }
+    }
+  },
+  "fresh": {
+    "delayed/0": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.7147946666666667,
+        "min": 0.6345293,
+        "max": 0.8003358,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 13.402666666666667,
+        "min": 13.331999999999999,
+        "max": 13.488,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 86.36666666666667,
+        "min": 85.9,
+        "max": 87.0,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": null,
+        "min": null,
+        "max": null,
+        "n_reached": 0
+      }
+    },
+    "delayed/8": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.8506582,
+        "min": 0.7443239,
+        "max": 0.9143087,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.3,
+        "min": 91.0,
+        "max": 91.7,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 0.579677,
+        "min": 0.454355,
+        "max": 0.7348177,
+        "n_reached": 3
+      }
+    },
+    "delayed/4": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.8187400666666667,
+        "min": 0.7098357,
+        "max": 0.9611061,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 70.67866666666667,
+        "min": 69.428,
+        "max": 72.816,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 90.8,
+        "min": 90.5,
+        "max": 91.1,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 0.6591007666666667,
+        "min": 0.574531,
+        "max": 0.7714252,
+        "n_reached": 3
+      }
+    },
+    "delayed/16": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.9034776,
+        "min": 0.7629021,
+        "max": 1.0796861,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.33333333333333,
+        "min": 91.0,
+        "max": 91.5,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 0.626171,
+        "min": 0.4600926,
+        "max": 0.8866961,
+        "n_reached": 3
+      }
+    },
+    "synchronous/0": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 2.5583305333333333,
+        "min": 2.2154302,
+        "max": 3.1586666,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.8,
+        "min": 91.8,
+        "max": 91.8,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 1.5489853666666666,
+        "min": 1.2676375,
+        "max": 2.0183852,
+        "n_reached": 3
+      }
+    },
+    "delayed/1": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.7543671,
+        "min": 0.704691,
+        "max": 0.7895318,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 27.589333333333332,
+        "min": 27.316000000000003,
+        "max": 27.74,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 87.9,
+        "min": 86.3,
+        "max": 89.2,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": null,
+        "min": null,
+        "max": null,
+        "n_reached": 0
+      }
+    },
+    "sequential/NA": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.7578322666666667,
+        "min": 0.7409283,
+        "max": 0.7882824,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 91.8,
+        "min": 91.8,
+        "max": 91.8,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": 0.4686128,
+        "min": 0.4465182,
+        "max": 0.4851475,
+        "n_reached": 3
+      }
+    },
+    "delayed/2": {
+      "n": 3,
+      "total_training_seconds": {
+        "mean": 0.7712379,
+        "min": 0.765253,
+        "max": 0.7749527,
+        "n_reached": 3
+      },
+      "hidden_update_acceptance_percent": {
+        "mean": 41.54266666666667,
+        "min": 41.256,
+        "max": 42.016,
+        "n_reached": 3
+      },
+      "final_test_accuracy_percent": {
+        "mean": 89.1,
+        "min": 88.6,
+        "max": 89.7,
+        "n_reached": 3
+      },
+      "time_to_90_percent_seconds": {
+        "mean": null,
+        "min": null,
+        "max": null,
+        "n_reached": 0
+      }
+    }
+  }
+}

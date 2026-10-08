@@ -1,0 +1,16 @@
+name: Verify reference runtime and supplied artifacts
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - run: mkdir -p build && g++ -O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic src/main.cpp -o build/mlp
+      - run: ./build/mlp --self-test
+      - run: python -m unittest discover -s tests
+      - run: python scripts/audit_supplied.py
+      - run: python scripts/verify_submission.py

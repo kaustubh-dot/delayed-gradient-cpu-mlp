@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="252.249615pt" height="152.72pt" viewBox="0 0 252.249615 152.72" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-08T23:06:49.831977</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 152.72 
+L 252.249615 152.72 
+L 252.249615 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="PathCollection_1">
+    <defs>
+     <path id="mcdf0d7564f" d="M 0 2.95804 
+C 0.784481 2.95804 1.536938 2.646362 2.09165 2.09165 
+C 2.646362 1.536938 2.95804 0.784481 2.95804 0 
+C 2.95804 -0.784481 2.646362 -1.536938 2.09165 -2.09165 
+C 1.536938 -2.646362 0.784481 -2.95804 0 -2.95804 
+C -0.784481 -2.95804 -1.536938 -2.646362 -2.09165 -2.09165 
+C -2.646362 -1.536938 -2.95804 -0.784481 -2.95804 0 
+C -2.95804 0.784481 -2.646362 1.536938 -2.09165 2.09165 
+C -1.536938 2.646362 -0.784481 2.95804 0 2.95804 
+z
+" style="stroke: #0f4d92"/>
+    </defs>
+    <g clip-path="url(#pc1fce85b91)">
+     <use xlink:href="#mcdf0d7564f" x="33.536494" y="48.12" style="fill: #0f4d92; stroke: #0f4d92"/>
+    </g>
+   </g>
+   <g id="PathCollection_2">
+    <g clip-path="url(#pc1fce85b91)">
+     <use xlink:href="#mcdf0d7564f" x="79.830651" y="48.12" style="fill: #0f4d92; stroke: #0f4d92"/>
+    </g>
+   </g>
+   <g id="PathCollection_3">
+    <g clip-path="url(#pc1fce85b91)">
+     <use xlink:href="#mcdf0d7564f" x="126.124808" y="48.12" style="fill: #0f4d92; stroke: #0f4d92"/>
+    </g>
+   </g>
+   <g id="PathCollection_4">
+    <g clip-path="url(#pc1fce85b91)">
+     <use xlink:href="#mcdf0d7564f" x="172.418964" y="48.12" style="fill: #0f4d92; stroke: #0f4d92"/>
+    </g>
+   </g>
+   <g id="PathCollection_5">
+    <g clip-path="url(#pc1fce85b91)">
+     <use xlink:href="#mcdf0d7564f" x="218.713121" y="48.12" style="fill: #0f4d92; stroke: #0f4d92"/>
+    </g>
+   </g>
+   <g id="line2d_1">
+    <path d="M 33.536494 48.12 
+L 218.713121 48.12 
+" clip-path="url(#pc1fce85b91)" style="fill: none; stroke: #272727; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="33.536494" y="31.646667" transform="rotate(-0 33.536494 31.646667)">v101</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="79.830651" y="31.646667" transform="rotate(-0 79.830651 31.646667)">v102</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="126.124808" y="31.646667" transform="rotate(-0 126.124808 31.646667)">v103</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="172.418964" y="31.646667" transform="rotate(-0 172.418964 31.646667)">v104</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="218.713121" y="31.646667" transform="rotate(-0 218.713121 31.646667)">v105</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(18.867744 69.752667)">Forward</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(12.522119 78.242667)">origin = 101</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(206.708121 69.781167)">Return</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(195.033121 78.242667)">current = 105</text>
+   </g>
+   <g id="patch_2">
+    <path d="M 36.652207 106.953333 
+Q 126.124403 106.953333 215.596599 106.953333 
+" style="fill: none; stroke: #b64342; stroke-linecap: round"/>
+    <path d="M 40.652207 108.953333 
+L 36.652207 106.953333 
+L 40.652207 104.953333 
+" style="fill: none; stroke: #b64342; stroke-linecap: round"/>
+    <path d="M 211.596599 104.953333 
+L 215.596599 106.953333 
+L 211.596599 108.953333 
+" style="fill: none; stroke: #b64342; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle" x="126.124808" y="97.54" transform="rotate(-0 126.124808 97.54)">Age = 4 accepted updates, not elapsed time</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(76.987933 122.372833)">tau 4: accept; tau 2: discard</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(72.533558 130.957333)">Output update already applied</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pc1fce85b91">
+   <rect x="5.76" y="5.76" width="240.729615" height="141.2"/>
+  </clipPath>
+ </defs>
+</svg>

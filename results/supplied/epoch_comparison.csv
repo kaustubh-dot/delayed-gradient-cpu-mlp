@@ -1,0 +1,10 @@
+run,configuration,tau_max,max_in_flight,hidden_update_acceptance_percent,final_test_accuracy_percent,final_test_loss,total_training_seconds,epoch_first_at_or_above_90_percent,time_to_90_percent_seconds
+1,sequential,NA,NA,100.00,91.4,0.275319,26.922346,2,10.876547
+2,sequential,NA,NA,100.00,91.4,0.275319,29.634729,2,11.379807
+1,synchronous,0,1,100.00,91.4,0.275319,28.614219,2,11.535596
+1,delayed,0,8,12.50,88.9,0.403280,9.997318,NA,NA
+1,delayed,1,8,27.168,91.1,0.305423,11.182586,5,11.182586
+1,delayed,2,8,47.968,90.5,0.316274,15.757172,4,12.709554
+1,delayed,4,8,69.160,92.1,0.263285,19.905946,2,8.016217
+2,delayed,4,8,71.400,91.1,0.271865,21.136274,2,8.518714
+1,delayed,8,8,100.00,92.2,0.260738,26.583509,2,10.756197

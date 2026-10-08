@@ -1,0 +1,3 @@
+configuration,tau_max,max_in_flight,total_training_seconds,accepted,discarded,hidden_update_acceptance_percent,final_test_accuracy_percent,mean_age,mean_accepted_age,max_age,w0_active_seconds,w0_pop_seconds,w1_active_seconds,w1_pop_seconds
+delayed,4,8,18.727468,15880.0,9120.0,63.52,91.0,3.12496,2.048111,5.0,18.690283,1.102028,0.817221,18.965798
+synchronous,0,1,28.95114,25000.0,0.0,100.0,91.4,0.0,0.0,0.0,27.146164,2.851415,0.586325,29.421418

@@ -15,6 +15,7 @@ Reviewed the authored report, README, demo, evidence/reproducibility notes, C++ 
 | Rounded ratio | The fresh synchronous/delay-four ratio is 3.124716424. The README's 3.13 was a rounding error; it now reports 3.125 and gives the unrounded value. |
 | Architecture cache | The diagram now labels the hidden cache as an input index plus saved activation `h`, matching `Cache` in the source. It does not imply a copied input vector or separately stored mask. |
 | Figure scale | Both tradeoff captions explicitly disclose the restricted accuracy axis. Means, observed ranges, and target dots retain their measured values. |
+| Machine description | CPU model and OS are recorded, but machine form factor is not. References to a laptop were replaced with CPU host. The harness sets no affinity; inherited system affinity was not independently profiled. |
 
 An unnecessary FDG online-publication-year aside was removed. Its journal year, four authors, volume 33, issue 10, and pages 6013–6020 were confirmed with [publisher-deposited DOI metadata](https://api.crossref.org/works/10.1109/TNNLS.2021.3069883).
 

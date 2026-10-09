@@ -1,130 +1,92 @@
-# Delayed gradients in CPU-based neural network training
+# Delayed Gradients in CPU Neural Network Training
 
-An Operating Systems course project by **Kaustubh Upadhya, Dhruv Pekhale, Jeet Mahajan, and Tejas Tandon**, Indian Institute of Information Technology, Sri City.
+Operating Systems course project by **Kaustubh Upadhya, Dhruv Pekhale, Jeet Mahajan, and Tejas Tandon**, Indian Institute of Information Technology, Sri City.
 
-**Research question:** How much synchronization waiting can CPU workers remove while keeping neural-network training useful?
+This project studies how relaxing synchronization affects a small neural network trained on a CPU. Two C++ workers own separate layers and exchange messages through bounded queues. Several examples can be in flight. The hidden worker accepts a returned gradient only when its version age is within the configured limit.
 
-This repository contains a C++17 reference implementation and an IEEE report studying a two-worker, bounded delayed-gradient runtime. A delayed gradient is a real backpropagated derivative computed from earlier hidden-layer state. Its age is the number of accepted hidden updates since its forward pass, not elapsed time.
+The submission includes the [IEEE report](report/main.pdf), its LaTeX source, active C++ implementation, raw measurements, publication figures, reproduction scripts, and tests.
 
-The original team's source code was unavailable. The code here is a documented reconstruction from the supplied architecture guides, with its own verification and independent measurements. Original and fresh results remain separate.
+## Model and execution
 
-## What the experiments show
+- MNIST, 784 inputs, 32 ReLU hidden units, and 10 output logits.
+- Softmax cross-entropy, SGD with learning rate 0.01, and seed 12345.
+- A seeded shuffle selects 5,000 training and 1,000 official test examples. The selected training indices are reshuffled each epoch.
+- Float parameters, zero biases, and seeded normal initialization.
+- Sequential training updates both layers in one thread.
+- Synchronous workers use `tau_max=0` and one example in flight.
+- Delayed workers use a configurable age gate and admission window. Each queue's capacity equals that window.
 
-| Evidence | Sequential mean | Delay 4 mean | Interpretation |
-|---|---:|---:|---|
-| Supplied five-epoch CSVs | 28.279 s, 91.4% final accuracy | 20.521 s, 91.6% final accuracy | Observed 1.38x ratio of mean times; original build/hardware unknown |
-| Fresh reference, three runs each | 0.758 s, 91.8% | 0.819 s, 90.8% | Delay 4 does not beat optimized sequential on average |
+The output layer updates for every example. Hidden rejection skips its local backward computation and update. On acceptance, the hidden layer recomputes its ReLU mask at the current parameters. A positive-age update therefore combines an older downstream signal with a current local Jacobian. The report explains this behavior and its limits.
 
-Fresh synchronous workers average 2.558 s. Delay 4 is faster than that worker handshake, with a descriptive 3.125x ratio (the unrounded ratio is 3.124716). Fresh delays 0, 1, and 2 fail to reach 90% in all three five-epoch runs. Delay 4, 8, and 16 reach the target, but sequential reaches it sooner on average.
+## Build and run
 
-These are workload-specific observations. Rejecting gradients also skips hidden update computation. Completed examples/second must be read with acceptance, test quality, and time to target. No universally optimal delay or general CPU speedup is established.
-
-![Runtime architecture](figures/architecture.png)
-
-## Architecture
-
-- Worker 0 owns the 784-to-32 ReLU layer, its version counter, and pending forward-state cache.
-- Worker 1 owns the 32-to-10 output layer and always applies one output update per example.
-- A coordinator admits at most `I` unfinished examples and drains each epoch before evaluation.
-- Three bounded mutex/condition-variable queues carry mixed hidden work, activations, and results. Returned gradients enter the hidden inbox.
-- Worker 0 applies a gradient when `current_version - origin_version <= tau`; otherwise it discards that hidden gradient and releases the example's completion credit.
-- Queue capacity is `2 * I` in this reconstruction. The original capacity is unknown.
-
-One message represents one example, despite the term "batch" in older notes. Inputs remain immutable, and the hidden owner caches the original activation/ReLU mask. The output derivative uses output weights before their update. There are no synthetic gradients, local objectives, gradient shrinking, weight prediction, or GPU dependencies.
-
-## Build and test
-
-Requirements: a C++17 compiler with thread support; Python 3.10+ for scripts. Tested locally with Windows 11, MSYS2 MinGW GCC 15.2.0, and Python 3.14. Linux GCC is supported by the portable source and CI workflow. On Windows, keep your compiler's runtime DLL directory on `PATH` when executing the locally built binary.
-
-From the repository root, using MSYS2 or a POSIX shell:
+Use C++17, a compiler with thread support, and Python 3.10 or later. GCC commands below work in Linux or an MSYS2 terminal on Windows. Windows executables receive an `.exe` suffix; their compiler runtime must be on `PATH`.
 
 ```bash
 mkdir -p build
-g++ -O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic src/main.cpp -o build/mlp
-./build/mlp --self-test
-python -m unittest discover -s tests
+g++ -O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic src/sequential_baseline.cpp src/dense_layer.cpp src/mnist.cpp -o build/sequential_baseline
+g++ -O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic src/main.cpp src/worker.cpp src/dense_layer.cpp src/mnist.cpp -o build/mnist_reader
+python -m pip install -r requirements.txt
+python scripts/download_mnist.py
+./build/sequential_baseline 5
+./build/mnist_reader 0 1 5
+./build/mnist_reader 4 8 5
 ```
 
-On Windows PowerShell:
+Run from the project root. The downloader verifies MNIST checksums and writes the four IDX files under `data/`. Dataset files and compiled executables are excluded from the repository.
 
-```powershell
-New-Item -ItemType Directory -Force build | Out-Null
-g++ -O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic src/main.cpp -o build/mlp.exe
-./build/mlp.exe --self-test
-python -m unittest discover -s tests
-```
+The worker arguments are `tau_max [max_in_flight] [epochs]`. Allowed delay bounds are `0, 1, 2, 4, 8, 16`; allowed windows are `1, 2, 4, 8, 16`; epochs range from 1 to 20. Defaults are an eight-example window and one epoch. The sequential executable accepts an optional epoch count, defaulting to one.
 
-Alternatively, build a release configuration with CMake:
+CMake is also supported:
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
-ctest --test-dir build -C Release --output-on-failure
+cmake --build build
+ctest --test-dir build --output-on-failure
+python -m unittest discover -s tests -v
 ```
 
-For a multi-configuration generator, set `MLP_EXE` to `build/Release/mlp.exe` when running the Python tests or pass `--exe` to the sweep script. The mathematical checks compare finite-difference derivatives; integration tests verify queue shutdown, strict sequential/synchronous equivalence, age bounds, and count conservation on a generated IDX fixture.
+For a Windows multi-configuration CMake generator, build the Release configuration and use its executable paths. The Python tests and experiment script otherwise expect both programs directly under `build/`.
 
-## Dataset and individual runs
+## Results
 
-Download MNIST locally; the script verifies the published compressed-file MD5 checksums and prints SHA-256 hashes of the unpacked IDX files. Dataset files are ignored by Git.
+| Five-epoch comparison | Sequential mean | Delay-four mean | Delay-four hidden acceptance |
+|---|---:|---:|---:|
+| Recorded runs | 28.279 s | 20.521 s | 70.28% |
+| New optimized sweep | 3.494 s | 2.408 s | 75.03% |
 
-```bash
-python scripts/download_mnist.py
-./build/mlp --mode sequential --epochs 5 --data data/mnist
-./build/mlp --mode workers --tau 0 --in-flight 1 --epochs 5 --data data/mnist
-./build/mlp --mode workers --tau 4 --in-flight 8 --epochs 5 --data data/mnist
-```
+The new sweep has three scheduling repetitions per setting. Delay four gives a ratio of mean sequential to delayed time of 1.451 and mean final accuracy of 92.07%, versus 91.4% sequentially. These gains include omitted hidden computation. They do not establish equal-work parallel speedup or a universally optimal delay.
 
-Use `mlp.exe` on Windows. Defaults are 5,000 first training records, 1,000 first official test records, learning rate 0.01, seed 12345, and five epochs. Training indices shuffle each epoch. A run prints checkpoint CSV to stdout and initialization/worker/queue diagnostics to stderr. Redirect them separately:
+The strict zero-age delayed setting finishes quickly but fails to reach 90% in the new five-epoch runs. Limits eight and sixteen accept all reachable ages for an eight-example FIFO pipeline. Their timing benefit over sequential training is small or absent in the retained comparisons.
 
-```bash
-./build/mlp --mode workers --tau 4 --in-flight 8 > run.csv 2> run.txt
-```
+Read [results and measurement definitions](docs/results.md) for reach counts, the corrected timing-log labels, and the limits of the evidence. Original machine and build settings for the early measurements were not recorded. Each evidence set is kept separate.
 
-`--help` lists all flags. Sequential mode ignores delay/window for execution. Synchronous means **tau=0 and in-flight=1**; tau=0 with eight in flight is a different asynchronous rejection policy.
-
-## Reproduce the sweep and plots
+## Reproduce the experiments
 
 ```bash
-python -m pip install -r requirements.txt
-python scripts/audit_supplied.py
-python scripts/run_experiments.py --output results/reproduction --repeats 3 --epochs 5
+python scripts/run_experiments.py --repeats 3 --epochs 5 --output results/my_run --build-flags="-O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic"
+python scripts/check_results.py
 python scripts/plot_results.py
-python scripts/audit_claims.py
-python scripts/verify_submission.py
+python scripts/check_report.py
 ```
 
-The harness randomizes configuration order within each repetition and runs configurations serially. It refuses to overwrite nonempty result folders. `plot_results.py` regenerates the committed submission figures from `results/supplied` and `results/fresh`; analyze later runs separately or deliberately update the selected input paths. Vector PDF/SVG and 300 dpi PNG outputs are included. Bands and whiskers are observed ranges, not confidence intervals.
+The experiment script retains complete raw logs, combined epoch rows, run summaries, source and dataset hashes, and environment metadata. It refuses to overwrite an existing results directory. Use `--sequential` and `--workers` for alternative executable locations and `--compiler` if GCC is not found as `g++`. Supply the flags actually used to build the binaries with `--build-flags`; the script cannot infer them. The example records the direct GCC build above. A CMake or different compiler build may use different flags.
 
-## Report and files
+The checks validate the committed measurements and report. The plotting script regenerates the submitted figures from the retained recorded and reproduction CSVs. It exports vector PDF/SVG and 300-dpi PNG. Bands and whiskers show observed ranges, not confidence intervals. The report uses generated numerical table inputs; compile `report/main.tex` with IEEEtran, BibTeX, and the required LaTeX packages, or with Tectonic.
 
-- [IEEE report PDF](report/main.pdf): 14 pages including figures and references; 13 primary references
-- [Report source](report/main.tex) and [BibTeX bibliography](report/references.bib)
-- [Reproducibility notes](docs/reproducibility.md), [evidence and claim mapping](docs/evidence.md), [demo guide](docs/demo.md)
-- `results/supplied/`: original CSVs, XLSX, timing log, and demo notes, unchanged
-- `results/derived/`: audit, corrected timing labels, extracted instrumented observations, descriptive summaries
-- `results/fresh/`: 24 raw CSV/text pairs, combined 120-epoch data, comparison, and environment/hashes
-- `figures/`: plots and conceptual diagrams, including vector exports
-- `docs/supplied/`: original project guides and architecture presentation for context
+## Contents
 
-Compile the report in `report/` with a TeX distribution containing IEEEtran:
+| Path | Contents |
+|---|---|
+| `src/` | Sequential baseline, layer and MNIST code, messages, bounded queue, and workers |
+| `tests/` | Numerical, queue, and runtime checks |
+| `results/pilot/` | Repeated one-epoch studies, including delay 16 |
+| `results/recorded/` | Main five-epoch CSVs and separate worker timing log |
+| `results/reproduction/` | New 24-run sweep and build/environment metadata |
+| `results/summary/` | Derived statistics and corrected instrumented rows |
+| `figures/` | Report figures in PDF, SVG, and PNG |
+| `report/` | Final IEEE PDF, LaTeX source, bibliography, and table inputs |
+| `scripts/` | Dataset download, experiment runner, plotting, and results/report checks |
+| `docs/` | Results definitions and demonstration sequence |
 
-```bash
-latexmk -pdf main.tex
-# Or, using Tectonic:
-tectonic main.tex
-```
-
-The compiled submission uses the standard IEEEtran conference class. Tables are generated from measured data by the plotting script.
-
-## Limitations
-
-The original source and environment are missing, and its timing headings are swapped. A corrected derived log uses numeric configuration fields; the raw evidence remains intact. Fresh measurements use one CPU host, no affinity set by the experiment, uncontrolled background load, one initialization seed, and only three scheduling repetitions. Time to 90% is observed at drained epoch checkpoints and excludes evaluation time. Fresh queue timers stop after mutex acquisition/predicate waiting, before deque mutation; pop counters can include evaluation/startup/drain gaps and are not CPU utilization. Exact original timer boundaries remain unverified. Maximum queue depth is not a time-weighted distribution. Memory payload sizes in the paper are calculated, not resident-memory measurements. This is a small systems prototype, not a state-of-the-art MNIST classifier.
-
-The preserved guides and presentation are historical material. Their claims about an earlier project folder or implementation are not proof that those files were supplied here. Use the report and [second-pass claim audit](docs/claim_audit.md) for the corrected submission claims.
-
-For eight in-flight examples, the single-output FIFO protocol bounds observed age by seven. Delay 8 and 16 therefore have equivalent acceptance policies here; differences between runs reflect scheduling rather than a meaningful acceptance-bound change.
-
-## License
-
-The MIT license applies to newly created source code, scripts, tests, and build files. Supplied artifacts and the authored report are excluded from that license; their authors retain their rights. External academic sources are cited, not redistributed as repository-owned work.
+See the [demonstration guide](docs/demo.md) for the presentation run order.

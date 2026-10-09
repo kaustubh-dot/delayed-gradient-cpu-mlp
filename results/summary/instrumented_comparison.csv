@@ -1,0 +1,3 @@
+configuration,tau_max,max_in_flight,total_training_seconds,w0_active_seconds,w0_pop_seconds,w1_active_seconds,w1_pop_seconds
+delayed,4,8,18.727468,18.690283,1.102028,0.817221,18.965798
+synchronous,0,1,28.95114,27.146164,2.851415,0.586325,29.421418

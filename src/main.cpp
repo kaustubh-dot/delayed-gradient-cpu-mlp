@@ -1,298 +1,457 @@
-// C++17 reference reconstruction from the supplied project design.
-// One message is one example; this program does not accumulate mini-batches.
+#include "bounded_queue.h"
+#include "dense_layer.h"
+#include "mnist.h"
+#include "messages.h"
+#include "worker.h"
+
 #include <algorithm>
-#include <array>
 #include <chrono>
 #include <cmath>
-#include <condition_variable>
+#include <cstddef>
 #include <cstdint>
-#include <deque>
-#include <fstream>
-#include <future>
+#include <exception>
 #include <iomanip>
 #include <iostream>
-#include <map>
-#include <mutex>
 #include <numeric>
 #include <random>
 #include <stdexcept>
 #include <string>
 #include <thread>
-#include <variant>
+#include <utility>
 #include <vector>
 
-using Clock = std::chrono::steady_clock;
-double seconds(Clock::duration d) { return std::chrono::duration<double>(d).count(); }
-constexpr int D=784, H=32, C=10;
-using Input=std::array<double,D>;
-using Hidden=std::array<double,H>;
-using Logits=std::array<double,C>;
+struct WorkerLifetime {
+    BoundedQueue<HiddenWorkMsg>& work;
+    BoundedQueue<ActivationMsg>& activations;
+    BoundedQueue<BatchResultMsg>& results;
+    std::thread& hidden;
+    std::thread& output;
 
-template<class T> class Queue {
-    std::mutex mu;
-    std::condition_variable readable, writable;
-    std::deque<T> items;
-    size_t capacity;
-    bool closed=false;
-public:
-    size_t max_depth=0;
-    double pop_seconds=0, push_seconds=0;
-    explicit Queue(size_t n):capacity(n) { if (!n) throw std::invalid_argument("queue capacity must be positive"); }
-    bool push(T item) {
-        auto start=Clock::now();
-        std::unique_lock<std::mutex> lock(mu);
-        writable.wait(lock,[&]{return closed || items.size()<capacity;});
-        push_seconds+=seconds(Clock::now()-start);
-        if (closed) return false;
-        items.push_back(std::move(item));
-        max_depth=std::max(max_depth,items.size());
-        readable.notify_one();
-        return true;
-    }
-    bool pop(T &item, double *measured=nullptr) {
-        auto start=Clock::now();
-        std::unique_lock<std::mutex> lock(mu);
-        readable.wait(lock,[&]{return closed || !items.empty();});
-        double duration=seconds(Clock::now()-start);
-        pop_seconds+=duration;
-        if (measured) *measured=duration;
-        if (items.empty()) return false;
-        item=std::move(items.front()); items.pop_front();
-        writable.notify_one();
-        return true;
-    }
-    void close() {
-        std::lock_guard<std::mutex> lock(mu); closed=true;
-        readable.notify_all(); writable.notify_all();
+    ~WorkerLifetime() {
+        work.close();
+        activations.close();
+        results.close();
+        if (hidden.joinable()) hidden.join();
+        if (output.joinable()) output.join();
     }
 };
 
-struct Data { std::vector<Input> x; std::vector<int> y; };
-uint32_t u32(std::istream &s) {
-    unsigned char b[4]; s.read(reinterpret_cast<char*>(b),4);
-    if (!s) throw std::runtime_error("truncated IDX header");
-    return (uint32_t(b[0])<<24)|(uint32_t(b[1])<<16)|(uint32_t(b[2])<<8)|b[3];
-}
-Data load(const std::string &root,const std::string &prefix,size_t limit) {
-    std::ifstream images(root+"/"+prefix+"-images-idx3-ubyte",std::ios::binary);
-    std::ifstream labels(root+"/"+prefix+"-labels-idx1-ubyte",std::ios::binary);
-    if(!images || !labels) throw std::runtime_error("MNIST IDX files missing; run scripts/download_mnist.py");
-    uint32_t im=u32(images), n=u32(images), rows=u32(images), cols=u32(images);
-    uint32_t lm=u32(labels), ln=u32(labels);
-    if(im!=2051 || lm!=2049 || rows!=28 || cols!=28 || n!=ln || limit>n)
-        throw std::runtime_error("invalid IDX dimensions, counts, or requested subset");
-    Data d; d.x.resize(limit); d.y.resize(limit);
-    for(size_t i=0;i<limit;++i) {
-        unsigned char pixels[D], label;
-        images.read(reinterpret_cast<char*>(pixels),D); labels.read(reinterpret_cast<char*>(&label),1);
-        if(!images || !labels || label>=C) throw std::runtime_error("invalid/truncated IDX data");
-        for(int j=0;j<D;++j) d.x[i][j]=pixels[j]/255.0;
-        d.y[i]=label;
-    }
-    return d;
-}
-struct Model {
-    std::array<double,D*H> w0{};
-    Hidden b0{};
-    std::array<double,H*C> w1{};
-    Logits b1{};
-    explicit Model(unsigned seed) {
-        std::mt19937 r0(seed),r1(seed+1);
-        std::normal_distribution<double> n0(0,std::sqrt(2.0/D)),n1(0,std::sqrt(1.0/H));
-        for(auto &w:w0) w=n0(r0);
-        for(auto &w:w1) w=n1(r1);
-    }
-    Hidden forward0(const Input &x) const {
-        Hidden h{};
-        for(int j=0;j<H;++j) {
-            double a=b0[j];
-            for(int i=0;i<D;++i) a+=w0[j*D+i]*x[i];
-            h[j]=std::max(0.0,a);
-        }
-        return h;
-    }
-    Logits forward1(const Hidden &h) const {
-        Logits z{};
-        for(int k=0;k<C;++k) {
-            z[k]=b1[k];
-            for(int j=0;j<H;++j) z[k]+=w1[k*H+j]*h[j];
-        }
-        return z;
-    }
-    static double loss(const Logits &z,int label,Logits *delta=nullptr) {
-        double maximum=*std::max_element(z.begin(),z.end()), sum=0;
-        Logits p{};
-        for(int k=0;k<C;++k) {p[k]=std::exp(z[k]-maximum);sum+=p[k];}
-        if(delta) {
-            for(int k=0;k<C;++k) (*delta)[k]=p[k]/sum;
-            (*delta)[label]-=1;
-        }
-        return maximum+std::log(sum)-z[label];
-    }
-    // Compute dL/dh using pre-update W1, then update only the output layer.
-    double update1(const Hidden &h,int label,double lr,Hidden &dh) {
-        Logits delta{};double l=loss(forward1(h),label,&delta);
-        dh.fill(0);
-        for(int k=0;k<C;++k) for(int j=0;j<H;++j) dh[j]+=w1[k*H+j]*delta[k];
-        for(int k=0;k<C;++k) {
-            for(int j=0;j<H;++j) w1[k*H+j]-=lr*delta[k]*h[j];
-            b1[k]-=lr*delta[k];
-        }
-        return l;
-    }
-    // h is the cached FORWARD activation, so its ReLU mask belongs to origin.
-    void update0(const Input &x,const Hidden &h,const Hidden &dh,double lr) {
-        for(int j=0;j<H;++j) if(h[j]>0) {
-            for(int i=0;i<D;++i) w0[j*D+i]-=lr*dh[j]*x[i];
-            b0[j]-=lr*dh[j];
-        }
-    }
-    double checksum() const {
-        double s=0;size_t i=1;
-        for(const auto &v:w0) s+=v*double(i++);
-        for(const auto &v:w1) s+=v*double(i++);
-        for(const auto &v:b0) s+=v*double(i++);
-        for(const auto &v:b1) s+=v*double(i++);
-        return s;
-    }
+struct Evaluation {
+    double average_loss = 0.0;
+    double accuracy = 0.0;
 };
-std::pair<double,double> evaluate(const Model &m,const Data &d) {
-    double l=0;size_t correct=0;
-    for(size_t i=0;i<d.x.size();++i) {
-        auto z=m.forward1(m.forward0(d.x[i])); l+=Model::loss(z,d.y[i]);
-        correct+=std::distance(z.begin(),std::max_element(z.begin(),z.end()))==d.y[i];
-    }
-    return {l/d.x.size(),100.0*correct/d.x.size()};
-}
-struct Train { size_t id,index; };
-struct Activation { size_t id;int label;uint64_t origin;Hidden h; };
-struct Gradient { size_t id;uint64_t origin;Hidden dh;double loss; };
-using Work=std::variant<Train,Gradient>;
-struct Result { size_t id;uint64_t age;bool accepted;double loss; };
-struct WorkerStats { double active=0, pop_wait=0;size_t processed=0; };
-struct Config {
-    std::string mode="sequential",data="data/mnist";
-    int epochs=5,tau=4,window=8,train=5000,test=1000;unsigned seed=12345;double lr=.01;
+
+struct LossResult {
+    float loss;
+    std::size_t prediction;
 };
-bool accept(uint64_t version,uint64_t origin,int tau) {
-    if(origin>version) throw std::logic_error("gradient originates in a future version");
-    return version-origin<=static_cast<uint64_t>(tau);
-}
-struct EpochStats {
-    size_t accepted=0,discarded=0,output=0,max_age=0,max_accepted_age=0,max_pending=0;
-    double age_sum=0,accepted_age_sum=0,loss_sum=0;
-};
-void add(EpochStats &s,const Result &r) {
-    s.loss_sum+=r.loss;s.age_sum+=r.age;s.max_age=std::max(s.max_age,size_t(r.age));s.output++;
-    if(r.accepted) {s.accepted++;s.accepted_age_sum+=r.age;s.max_accepted_age=std::max(s.max_accepted_age,size_t(r.age));}
-    else s.discarded++;
-}
-void train(const Config &c) {
-    Data data=load(c.data,"train",c.train),test=load(c.data,"t10k",c.test);
-    Model model(c.seed);
-    std::mt19937 shuffle(c.seed);std::vector<size_t> order(data.x.size());std::iota(order.begin(),order.end(),0);
-    size_t capacity=2*size_t(c.window);
-    Queue<Work> inbox(capacity);Queue<Activation> activations(capacity);Queue<Result> results(capacity);
-    WorkerStats w0,w1;
-    std::thread hidden,output;
-    if(c.mode=="workers") {
-        hidden=std::thread([&]{
-            struct Cache {size_t index;Hidden h;};std::map<size_t,Cache> pending;
-            uint64_t version=0;Work msg;double wait=0;
-            while(inbox.pop(msg,&wait)) {
-                w0.pop_wait+=wait;auto start=Clock::now();
-                if(auto *t=std::get_if<Train>(&msg)) {
-                    Hidden h=model.forward0(data.x[t->index]);
-                    pending.emplace(t->id,Cache{t->index,h});
-                    activations.push({t->id,data.y[t->index],version,h});
-                } else {
-                    const auto &g=std::get<Gradient>(msg);auto it=pending.find(g.id);
-                    if(it==pending.end()) throw std::logic_error("gradient cache miss");
-                    uint64_t age=version-g.origin;bool ok=accept(version,g.origin,c.tau);
-                    if(ok) {model.update0(data.x[it->second.index],it->second.h,g.dh,c.lr);version++;}
-                    pending.erase(it);results.push({g.id,age,ok,g.loss});w0.processed++;
-                }
-                w0.active+=seconds(Clock::now()-start);
-            }
-            w0.pop_wait+=wait;activations.close();
-        });
-        output=std::thread([&]{
-            Activation a;double wait=0;
-            while(activations.pop(a,&wait)) {
-                w1.pop_wait+=wait;auto start=Clock::now();Hidden dh{};
-                double l=model.update1(a.h,a.label,c.lr,dh);
-                inbox.push(Gradient{a.id,a.origin,dh,l});w1.processed++;
-                w1.active+=seconds(Clock::now()-start);
-            }
-            w1.pop_wait+=wait;
-        });
+
+std::vector<float> make_input(const MnistData& data, std::size_t image_index) {
+    const std::size_t image_size =
+        static_cast<std::size_t>(data.rows) * data.cols;
+    const std::size_t start = image_index * image_size;
+
+    std::vector<float> input(image_size);
+    for (std::size_t i = 0; i < image_size; ++i) {
+        input[i] = static_cast<float>(data.images[start + i]) / 255.0f;
     }
-    auto initial=evaluate(model,test); // Workers have no tasks during this evaluation.
-    std::cerr<<std::setprecision(12)<<"initial_test_loss="<<initial.first<<" initial_accuracy="<<initial.second<<'\n';
-    std::cout<<"epoch,training_loss,test_loss,test_accuracy_percent,elapsed_training_seconds,epoch_training_seconds,accepted,discarded,output_updates,mean_age,mean_accepted_age,max_age,max_accepted_age,max_pending,parameter_checksum\n";
-    double total=0;size_t id=0;
-    for(int e=1;e<=c.epochs;++e) {
-        std::shuffle(order.begin(),order.end(),shuffle);EpochStats s;auto start=Clock::now();
-        if(c.mode=="sequential") {
-            for(size_t i:order) {
-                Hidden h=model.forward0(data.x[i]),dh{};double l=model.update1(h,data.y[i],c.lr,dh);
-                model.update0(data.x[i],h,dh,c.lr);add(s,{id++,0,true,l});
-            }
-            s.max_pending=1;
-        } else {
-            size_t submitted=0,completed=0;
-            while(completed<order.size()) {
-                while(submitted<order.size() && submitted-completed<size_t(c.window)) {
-                    inbox.push(Train{id++,order[submitted++]});s.max_pending=std::max(s.max_pending,submitted-completed);
-                }
-                Result r;if(!results.pop(r)) throw std::runtime_error("unexpected result-queue closure");
-                add(s,r);completed++;
-            }
+
+    return input;
+}
+
+LossResult calculate_loss_and_prediction(
+    const std::vector<float>& logits,
+    std::size_t correct_label) {
+    if (logits.empty() || correct_label >= logits.size()) {
+        throw std::runtime_error("Invalid logits or label");
+    }
+
+    float max_logit = logits[0];
+    std::size_t prediction = 0;
+
+    for (std::size_t i = 1; i < logits.size(); ++i) {
+        if (logits[i] > max_logit) {
+            max_logit = logits[i];
+            prediction = i;
         }
-        double epoch_time=seconds(Clock::now()-start);total+=epoch_time;
-        // Every output update precedes its gradient/result. Draining results
-        // establishes queue mutex happens-before edges for both layer writes.
-        auto metric=evaluate(model,test);
-        std::cout<<std::fixed<<std::setprecision(12)<<e<<','<<s.loss_sum/c.train<<','<<metric.first<<','<<metric.second<<','<<total<<','<<epoch_time<<','<<s.accepted<<','<<s.discarded<<','<<s.output<<','<<s.age_sum/c.train<<','<<(s.accepted?s.accepted_age_sum/s.accepted:0)<<','<<s.max_age<<','<<s.max_accepted_age<<','<<s.max_pending<<','<<model.checksum()<<'\n';
     }
-    if(c.mode=="workers") {inbox.close();hidden.join();output.join();}
-    std::cerr<<"queue_capacity="<<capacity<<" hidden_inbox_max="<<inbox.max_depth<<" activation_queue_max="<<activations.max_depth<<" result_queue_max="<<results.max_depth<<'\n';
-    std::cerr<<"w0_active_seconds="<<w0.active<<" w0_pop_seconds="<<w0.pop_wait<<" w1_active_seconds="<<w1.active<<" w1_pop_seconds="<<w1.pop_wait<<'\n';
-    std::cerr<<"inbox_push_seconds="<<inbox.push_seconds<<" activation_push_seconds="<<activations.push_seconds<<" result_push_seconds="<<results.push_seconds<<'\n';
-    std::cerr<<"Worker pop durations include evaluation/startup/drain intervals. They are not CPU utilization.\n";
+
+    double sum_exp = 0.0;
+    for (float logit : logits) {
+        sum_exp += std::exp(static_cast<double>(logit - max_logit));
+    }
+
+    const float loss =
+        max_logit + static_cast<float>(std::log(sum_exp))
+        - logits[correct_label];
+
+    return {loss, prediction};
 }
-void require(bool b,const std::string &message) {if(!b) throw std::runtime_error(message);}
-void self_test() {
-    require(accept(105,101,4) && !accept(105,101,2) && accept(101,101,0),"age policy");
-    bool future=false;try{accept(1,2,4);}catch(const std::logic_error&){future=true;}require(future,"future version rejection");
-    Queue<int> q(1);require(q.push(5),"push");q.close();int i=0;require(q.pop(i)&&i==5&&!q.pop(i)&&!q.push(2),"close and drain");
-    Queue<int> empty(1);std::promise<void> ready;auto waiting=std::async(std::launch::async,[&]{ready.set_value();int x;return empty.pop(x);});
-    ready.get_future().wait();empty.close();require(!waiting.get(),"close wakes consumer");
-    Queue<int> full(1);full.push(1);std::promise<void> ready2;auto blocked=std::async(std::launch::async,[&]{ready2.set_value();return full.push(2);});
-    ready2.get_future().wait();full.close();require(!blocked.get(),"close wakes producer");
-    Model m(12345);Input x{};for(int j=0;j<D;++j)x[j]=(j%17)/17.0;
-    auto h=m.forward0(x);Model updated=m;Hidden dh{};double lr=1e-4;updated.update1(h,3,lr,dh);updated.update0(x,h,dh,lr);
-    auto objective=[&]{return Model::loss(m.forward1(m.forward0(x)),3);};
-    auto check=[&](double &p,double old,double after){double eps=1e-6;p=old+eps;double plus=objective();p=old-eps;double minus=objective();p=old;double numerical=(plus-minus)/(2*eps),analytic=(old-after)/lr;require(std::abs(numerical-analytic)<1e-5*(1+std::abs(numerical)),"finite-difference gradient mismatch");};
-    for(int j=0;j<H;j+=3) for(int k=0;k<D;k+=101)check(m.w0[j*D+k],m.w0[j*D+k],updated.w0[j*D+k]);
-    for(int k=0;k<C;++k) {check(m.b1[k],m.b1[k],updated.b1[k]);for(int j=0;j<H;j+=5)check(m.w1[k*H+j],m.w1[k*H+j],updated.w1[k*H+j]);}
-    for(int j=0;j<H;++j)check(m.b0[j],m.b0[j],updated.b0[j]);
-    Logits huge{};huge.fill(10000);require(std::isfinite(Model::loss(huge,0)),"stable softmax");
-    std::cout<<"PASS finite-difference gradients, stable loss, version policy, queue drain, close/wakeup\n";
+
+Evaluation evaluate(const DenseLayer& hidden_layer,
+                   const DenseLayer& output_layer,
+                   const MnistData& data,
+                   const std::vector<std::size_t>& indices) {
+    Evaluation result;
+    std::size_t correct = 0;
+
+    for (std::size_t image_index : indices) {
+        const std::vector<float> input = make_input(data, image_index);
+        const std::vector<float> hidden = hidden_layer.forward(input);
+        const std::vector<float> logits = output_layer.forward(hidden);
+        const LossResult prediction =
+            calculate_loss_and_prediction(logits, data.labels[image_index]);
+
+        result.average_loss += prediction.loss;
+        if (prediction.prediction == data.labels[image_index]) {
+            ++correct;
+        }
+    }
+
+    result.average_loss /= static_cast<double>(indices.size());
+    result.accuracy =
+        static_cast<double>(correct) / static_cast<double>(indices.size());
+
+    return result;
 }
-int main(int argc,char **argv) {
+
+int main(int argc, char* argv[]) {
     try {
-        if(argc==2 && std::string(argv[1])=="--self-test") {self_test();return 0;}
-        Config c;
-        for(int i=1;i<argc;++i) {
-            std::string k=argv[i];
-            if(k=="--help") {std::cout<<"mlp --mode sequential|workers --tau N --in-flight N --epochs N --train N --test N --seed N --lr F --data PATH\n";return 0;}
-            if(i+1>=argc) throw std::invalid_argument("missing argument for "+k);
-            std::string v=argv[++i];
-            if(k=="--mode")c.mode=v;else if(k=="--data")c.data=v;else if(k=="--tau")c.tau=std::stoi(v);else if(k=="--in-flight")c.window=std::stoi(v);else if(k=="--epochs")c.epochs=std::stoi(v);else if(k=="--train")c.train=std::stoi(v);else if(k=="--test")c.test=std::stoi(v);else if(k=="--seed")c.seed=static_cast<unsigned>(std::stoul(v));else if(k=="--lr")c.lr=std::stod(v);else throw std::invalid_argument("unknown flag: "+k);
+        if (argc < 2 || argc > 4) {
+            std::cerr
+                << "Usage: ./mnist_reader.exe <tau_max> "
+                << "[max_in_flight] [epochs]\n"
+                << "Allowed tau_max values: 0, 1, 2, 4, 8, 16\n"
+                << "Allowed max_in_flight values: 1, 2, 4, 8, 16\n"
+                << "Epochs must be between 1 and 20\n";
+            return 2;
         }
-        if(c.window<=0 || c.epochs<=0 || c.train<=0 || c.test<=0 || c.lr<=0 || !std::isfinite(c.lr) || c.tau<0)throw std::invalid_argument("counts and learning rate must be positive; tau must be nonnegative");
-        if(c.mode!="workers" && c.mode!="sequential")throw std::invalid_argument("invalid mode");
-        train(c);return 0;
-    }catch(const std::exception &e){std::cerr<<"error: "<<e.what()<<'\n';return 1;}
+
+        const std::string tau_argument = argv[1];
+        std::size_t tau_characters = 0;
+        const std::uint64_t tau_max =
+            std::stoull(tau_argument, &tau_characters);
+
+        if (tau_characters != tau_argument.size()) {
+            throw std::invalid_argument("tau_max must be an integer");
+        }
+
+        const std::vector<std::uint64_t> allowed_tau_values = {
+            0, 1, 2, 4, 8, 16
+        };
+
+        if (std::find(allowed_tau_values.begin(),
+                      allowed_tau_values.end(),
+                      tau_max) == allowed_tau_values.end()) {
+            throw std::invalid_argument(
+                "tau_max must be one of: 0, 1, 2, 4, 8, 16");
+        }
+
+        std::size_t max_in_flight = 8;
+        if (argc >= 3) {
+            const std::string in_flight_argument = argv[2];
+            std::size_t in_flight_characters = 0;
+            max_in_flight = static_cast<std::size_t>(
+                std::stoull(in_flight_argument, &in_flight_characters));
+
+            if (in_flight_characters != in_flight_argument.size()) {
+                throw std::invalid_argument(
+                    "max_in_flight must be an integer");
+            }
+        }
+
+        const std::vector<std::size_t> allowed_in_flight_values = {
+            1, 2, 4, 8, 16
+        };
+
+        if (std::find(allowed_in_flight_values.begin(),
+                      allowed_in_flight_values.end(),
+                      max_in_flight) == allowed_in_flight_values.end()) {
+            throw std::invalid_argument(
+                "max_in_flight must be one of: 1, 2, 4, 8, 16");
+        }
+
+        std::size_t epochs = 1;
+        if (argc == 4) {
+            const std::string epochs_argument = argv[3];
+            std::size_t epoch_characters = 0;
+            epochs = static_cast<std::size_t>(
+                std::stoull(epochs_argument, &epoch_characters));
+
+            if (epoch_characters != epochs_argument.size()) {
+                throw std::invalid_argument("epochs must be an integer");
+            }
+        }
+
+        if (epochs < 1 || epochs > 20) {
+            throw std::invalid_argument(
+                "epochs must be between 1 and 20");
+        }
+
+        const MnistData train = load_mnist(
+            "data/train-images.idx3-ubyte",
+            "data/train-labels.idx1-ubyte");
+
+        const MnistData test = load_mnist(
+            "data/t10k-images.idx3-ubyte",
+            "data/t10k-labels.idx1-ubyte");
+
+        constexpr std::size_t training_count = 5000;
+        constexpr std::size_t evaluation_count = 1000;
+        constexpr float learning_rate = 0.01f;
+        constexpr unsigned int seed = 12345;
+
+        if (train.labels.size() < training_count ||
+            test.labels.size() < evaluation_count) {
+            throw std::runtime_error(
+                "Dataset is smaller than requested subset");
+        }
+
+        std::mt19937 generator(seed);
+
+        std::vector<std::size_t> train_indices(train.labels.size());
+        std::iota(train_indices.begin(), train_indices.end(), 0);
+        std::shuffle(train_indices.begin(), train_indices.end(), generator);
+        train_indices.resize(training_count);
+
+        std::vector<std::size_t> test_indices(test.labels.size());
+        std::iota(test_indices.begin(), test_indices.end(), 0);
+        std::shuffle(test_indices.begin(), test_indices.end(), generator);
+        test_indices.resize(evaluation_count);
+
+        DenseLayer hidden_layer(784, 32, Activation::Relu, seed);
+        DenseLayer output_layer(32, 10, Activation::None, seed + 1);
+
+        const Evaluation before =
+            evaluate(hidden_layer, output_layer, test, test_indices);
+
+        BoundedQueue<HiddenWorkMsg> work_queue(max_in_flight);
+        BoundedQueue<ActivationMsg> activation_queue(max_in_flight);
+        BoundedQueue<BatchResultMsg> result_queue(max_in_flight);
+
+        HiddenWorker hidden_worker(
+            hidden_layer,
+            work_queue,
+            activation_queue,
+            result_queue,
+            learning_rate,
+            tau_max);
+
+        OutputWorker output_worker(
+            output_layer,
+            activation_queue,
+            work_queue,
+            learning_rate);
+
+        std::thread output_thread;
+        std::thread hidden_thread;
+        WorkerLifetime lifetime{work_queue, activation_queue, result_queue,
+                                hidden_thread, output_thread};
+        output_thread = std::thread(&OutputWorker::run, &output_worker);
+        hidden_thread = std::thread(&HiddenWorker::run, &hidden_worker);
+
+        std::size_t total_completed = 0;
+        std::size_t total_accepted = 0;
+        std::size_t total_discarded = 0;
+        std::uint64_t total_gradient_age = 0;
+        std::uint64_t accepted_gradient_age_sum = 0;
+        std::uint64_t maximum_gradient_age = 0;
+        double total_training_loss = 0.0;
+        double cumulative_training_seconds = 0.0;
+
+        std::vector<Evaluation> epoch_evaluations;
+        std::vector<double> epoch_average_losses;
+        std::vector<double> epoch_elapsed_seconds;
+        epoch_evaluations.reserve(epochs);
+        epoch_average_losses.reserve(epochs);
+        epoch_elapsed_seconds.reserve(epochs);
+
+        for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
+            std::shuffle(train_indices.begin(), train_indices.end(), generator);
+
+            std::vector<bool> completed(training_count, false);
+            std::size_t submitted = 0;
+            std::size_t completed_this_epoch = 0;
+            double epoch_training_loss = 0.0;
+
+            const std::uint64_t batch_id_offset =
+                static_cast<std::uint64_t>(epoch) * training_count;
+
+            const auto epoch_training_start =
+                std::chrono::steady_clock::now();
+
+            while (completed_this_epoch < training_count) {
+                while (submitted < training_count &&
+                       submitted - completed_this_epoch < max_in_flight) {
+                    const std::size_t image_index = train_indices[submitted];
+
+                    TrainingMsg training;
+                    training.batch_id = batch_id_offset + submitted;
+                    training.label = train.labels[image_index];
+                    training.input = make_input(train, image_index);
+                    training.enqueued_at =
+                        std::chrono::steady_clock::now();
+
+                    if (!work_queue.push(
+                            HiddenWorkMsg{std::move(training)})) {
+                        break;
+                    }
+
+                    ++submitted;
+                }
+
+                BatchResultMsg result;
+                if (!result_queue.pop(result)) {
+                    throw std::runtime_error(
+                        "Result queue closed before the epoch completed");
+                }
+
+                if (result.batch_id < batch_id_offset ||
+                    result.batch_id >= batch_id_offset + training_count) {
+                    throw std::runtime_error(
+                        "Coordinator received a result from the wrong epoch");
+                }
+
+                const std::size_t local_batch_id =
+                    static_cast<std::size_t>(
+                        result.batch_id - batch_id_offset);
+
+                if (completed[local_batch_id]) {
+                    throw std::runtime_error(
+                        "Coordinator received a duplicate batch result");
+                }
+
+                completed[local_batch_id] = true;
+                ++completed_this_epoch;
+                ++total_completed;
+
+                epoch_training_loss += result.loss;
+                total_training_loss += result.loss;
+                total_gradient_age += result.gradient_age;
+                maximum_gradient_age =
+                    std::max(maximum_gradient_age, result.gradient_age);
+
+                if (result.gradient_accepted) {
+                    ++total_accepted;
+                    accepted_gradient_age_sum += result.gradient_age;
+                } else {
+                    ++total_discarded;
+                }
+            }
+
+            const auto epoch_training_end =
+                std::chrono::steady_clock::now();
+            cumulative_training_seconds +=
+                std::chrono::duration<double>(
+                    epoch_training_end - epoch_training_start).count();
+
+            epoch_average_losses.push_back(
+                epoch_training_loss / training_count);
+            epoch_elapsed_seconds.push_back(cumulative_training_seconds);
+
+            epoch_evaluations.push_back(
+                evaluate(hidden_layer, output_layer, test, test_indices));
+        }
+
+        work_queue.close();
+        hidden_thread.join();
+        output_thread.join();
+
+        hidden_worker.rethrow_if_error();
+        output_worker.rethrow_if_error();
+
+        const std::size_t hidden_updates =
+            static_cast<std::size_t>(hidden_layer.version());
+        const std::size_t output_updates =
+            static_cast<std::size_t>(output_layer.version());
+
+        const WorkerMetrics& hidden_metrics = hidden_worker.metrics();
+        const WorkerMetrics& output_metrics = output_worker.metrics();
+
+        std::cout << std::fixed << std::setprecision(6);
+        std::cout << "epoch,average_training_loss,test_loss,"
+                     "test_accuracy_percent,elapsed_training_seconds\n";
+
+        for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
+            const Evaluation& evaluation = epoch_evaluations[epoch];
+
+            std::cout << (epoch + 1) << ','
+                      << epoch_average_losses[epoch] << ','
+                      << evaluation.average_loss << ','
+                      << evaluation.accuracy * 100.0 << ','
+                      << epoch_elapsed_seconds[epoch] << '\n';
+        }
+
+        std::cout << "Implementation: bounded delayed-gradient model\n";
+        std::cout << "Workers: 2\n";
+        std::cout << "Maximum batches in flight: " << max_in_flight << '\n';
+        std::cout << "Maximum gradient age: " << tau_max << '\n';
+        std::cout << "Training examples per epoch: "
+                  << training_count << '\n';
+        std::cout << "Completed examples: " << total_completed << '\n';
+        std::cout << "Epochs: " << epochs << '\n';
+        std::cout << "Learning rate: " << learning_rate << '\n';
+        std::cout << "Seed: " << seed << '\n';
+        std::cout << "Average training loss: "
+                  << total_training_loss / total_completed << '\n';
+        std::cout << "Worker 0 accepted updates: "
+                  << hidden_updates << '\n';
+        std::cout << "Worker 0 discarded gradients: "
+                  << total_discarded << '\n';
+        std::cout << "Worker 0 update acceptance: "
+                  << 100.0 * hidden_updates / total_completed << "%\n";
+        std::cout << "Worker 1 updates: " << output_updates << '\n';
+        std::cout << "Average age of all gradients: "
+                  << static_cast<double>(total_gradient_age) /
+                         total_completed << '\n';
+        std::cout << "Average age of accepted gradients: "
+                  << (total_accepted == 0
+                          ? 0.0
+                          : static_cast<double>(
+                                accepted_gradient_age_sum) /
+                                total_accepted)
+                  << '\n';
+        std::cout << "Maximum observed gradient age: "
+                  << maximum_gradient_age << '\n';
+        std::cout << "Test subset size: " << evaluation_count << '\n';
+        std::cout << "Test loss before training: "
+                  << before.average_loss << '\n';
+        std::cout << "Test accuracy before training: "
+                  << before.accuracy * 100.0 << "%\n";
+        std::cout << "Test loss after training: "
+                  << epoch_evaluations.back().average_loss << '\n';
+        std::cout << "Test accuracy after training: "
+                  << epoch_evaluations.back().accuracy * 100.0 << "%\n";
+        std::cout << "Total training time: "
+                  << cumulative_training_seconds << " seconds\n";
+        std::cout << "Completed-example rate: "
+                  << total_completed / cumulative_training_seconds
+                  << " examples/second\n";
+        std::cout << "Worker 0 update rate: "
+                  << hidden_updates / cumulative_training_seconds
+                  << " updates/second\n";
+        std::cout << "Worker 1 update rate: "
+                  << output_updates / cumulative_training_seconds
+                  << " updates/second\n";
+
+        std::cout << "Worker 0 processed batches: "
+                  << hidden_metrics.processed_batches << '\n';
+        std::cout << "Worker 0 active-path time "
+                     "(processing and queue pushes): "
+                  << hidden_metrics.active_seconds << " seconds\n";
+        std::cout << "Worker 0 input-queue wait time: "
+                  << hidden_metrics.waiting_seconds << " seconds\n";
+        std::cout << "Worker 1 processed batches: "
+                  << output_metrics.processed_batches << '\n';
+        std::cout << "Worker 1 active-path time "
+                     "(processing and queue pushes): "
+                  << output_metrics.active_seconds << " seconds\n";
+        std::cout << "Worker 1 input-queue wait time: "
+                  << output_metrics.waiting_seconds << " seconds\n";
+
+        return 0;
+    } catch (const std::exception& error) {
+        std::cerr << "Error: " << error.what() << '\n';
+        return 1;
+    }
 }

@@ -2,7 +2,6 @@
 * -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 *.pdf binary
 *.png binary
-*.xlsx binary
-*.pptx binary
 *.svg -whitespace
-results/supplied/** -whitespace
+results/pilot/** -whitespace
+results/recorded/** -whitespace

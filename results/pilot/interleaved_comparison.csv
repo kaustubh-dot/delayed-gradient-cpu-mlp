@@ -1,0 +1,16 @@
+repetition,mode,training_seconds,test_accuracy,test_loss
+1,sequential,6.26582,88.5%,0.39213
+1,synchronous,6.2234,88.5%,0.39213
+1,delayed_tau8,6.60146,87.8%,0.413119
+2,synchronous,6.2855,88.5%,0.39213
+2,delayed_tau8,5.96124,87.8%,0.413119
+2,sequential,5.91071,88.5%,0.39213
+3,delayed_tau8,5.91218,87.8%,0.413119
+3,sequential,5.90397,88.5%,0.39213
+3,synchronous,6.41093,88.5%,0.39213
+4,sequential,6.48884,88.5%,0.39213
+4,delayed_tau8,6.27808,87.8%,0.413119
+4,synchronous,6.79463,88.5%,0.39213
+5,synchronous,6.49182,88.5%,0.39213
+5,sequential,5.66736,88.5%,0.39213
+5,delayed_tau8,5.34842,87.8%,0.413119

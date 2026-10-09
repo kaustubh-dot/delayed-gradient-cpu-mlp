@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-10-09T00:06:45.080837</dc:date>
+    <dc:date>2026-10-09T15:13:34.197934</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 8.32 93.92 8.32 96.675
 L 8.32 162.795 
 Q 8.32 165.55 10.88 165.55 
 z
-" clip-path="url(#pb7c6fa74aa)" style="fill: #eeeeee; stroke: #272727; stroke-linejoin: miter"/>
+" clip-path="url(#pf2e5f86f73)" style="fill: #eeeeee; stroke: #272727; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 128.64 165.55 
@@ -53,7 +53,7 @@ Q 126.08 93.92 126.08 96.675
 L 126.08 162.795 
 Q 126.08 165.55 128.64 165.55 
 z
-" clip-path="url(#pb7c6fa74aa)" style="fill: #ddf3de; stroke: #272727; stroke-linejoin: miter"/>
+" clip-path="url(#pf2e5f86f73)" style="fill: #ddf3de; stroke: #272727; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 225.92 165.55 
@@ -66,7 +66,7 @@ Q 223.36 93.92 223.36 96.675
 L 223.36 162.795 
 Q 223.36 165.55 225.92 165.55 
 z
-" clip-path="url(#pb7c6fa74aa)" style="fill: #d8e8fa; stroke: #272727; stroke-linejoin: miter"/>
+" clip-path="url(#pf2e5f86f73)" style="fill: #d8e8fa; stroke: #272727; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 407.68 165.55 
@@ -79,7 +79,7 @@ Q 405.12 93.92 405.12 96.675
 L 405.12 162.795 
 Q 405.12 165.55 407.68 165.55 
 z
-" clip-path="url(#pb7c6fa74aa)" style="fill: #f6cfcb; stroke: #272727; stroke-linejoin: miter"/>
+" clip-path="url(#pf2e5f86f73)" style="fill: #f6cfcb; stroke: #272727; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(32.168906 122.542453)">Coordinator</text>
@@ -87,15 +87,15 @@ z
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(32.164687 141.580828)">epoch drain</text>
    </g>
    <g id="text_2">
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(141.749687 122.473687)">Mixed inbox</text>
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(141.923359 131.992875)">Train / Grad</text>
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(144.25 141.544125)">capacity 2I</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(141.749687 122.489719)">Mixed inbox</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(141.923359 132.008906)">Train / Grad</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(146.752422 141.528094)">capacity I</text>
    </g>
    <g id="text_3">
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(253.827031 117.782859)">Worker 0</text>
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(252.860938 127.302047)">784 -&gt; 32</text>
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(235.477578 136.821234)">sole hidden owner</text>
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(240.482422 146.340422)">cache: index / h</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(244.235 146.340422)">cache: input x</text>
    </g>
    <g id="text_4">
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'" transform="translate(439.427031 122.542453)">Worker 1</text>
@@ -143,7 +143,7 @@ L 172.693065 87.497407
 " style="fill: none; stroke: #b64342; stroke-linecap: round"/>
    </g>
    <g id="text_6">
-    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #b64342" x="328.32" y="41.024" transform="rotate(-0 328.32 41.024)">Real gradient returns to hidden inbox</text>
+    <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #b64342" x="328.32" y="41.024" transform="rotate(-0 328.32 41.024)">Downstream derivative returns to hidden inbox</text>
    </g>
    <g id="patch_10">
     <path d="M 270.060781 174.31465 
@@ -160,7 +160,7 @@ L 64.348459 173.641798
   </g>
  </g>
  <defs>
-  <clipPath id="pb7c6fa74aa">
+  <clipPath id="pf2e5f86f73">
    <rect x="5.76" y="5.76" width="512" height="220.4"/>
   </clipPath>
  </defs>

@@ -1,5 +1,0 @@
-initial_test_loss=2.33097094466 initial_accuracy=7.6
-queue_capacity=2 hidden_inbox_max=1 activation_queue_max=1 result_queue_max=1
-w0_active_seconds=0.9792798 w0_pop_seconds=1.3149622 w1_active_seconds=0.1525564 w1_pop_seconds=2.1549424
-inbox_push_seconds=0.0066879 activation_push_seconds=0.0020642 result_push_seconds=0.0031406
-Worker pop durations include evaluation/startup/drain intervals. They are not CPU utilization.

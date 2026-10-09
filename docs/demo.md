@@ -1,15 +1,19 @@
-# Short demo
+# Demonstration
 
-Build at `-O2`, run `--self-test`, and download MNIST first. Run from the repository root. Use `mlp.exe` on Windows.
+Build both executables and download MNIST using the README commands. Run commands from the project root. On Windows, append `.exe` to the executable paths below.
 
 ```bash
-./build/mlp --mode sequential --epochs 5
-./build/mlp --mode workers --tau 0 --in-flight 1 --epochs 5
-./build/mlp --mode workers --tau 4 --in-flight 8 --epochs 5
+./build/sequential_baseline 5
+./build/mnist_reader 0 1 5
+./build/mnist_reader 0 8 5
+./build/mnist_reader 4 8 5
+./build/mnist_reader 8 8 5
 ```
 
-Explain the architecture while the runs execute: Worker 0 owns the hidden layer, Worker 1 owns the output layer, queues carry activations and true derivatives, and origin versions let Worker 0 reject old hidden updates. Evaluation happens only after an epoch drain.
+Start with the sequential and synchronous results. Their loss and accuracy checkpoints should agree on the same toolchain. Synchronous execution permits one example in flight, so every returned gradient has age zero.
 
-Show `figures/time_to_target.png` and both original/fresh tradeoff plots. The original data favors delay four; the fresh optimized study does not beat sequential on average. Delayed execution beats the synchronous worker handshake in the fresh study, while tight bounds fail the quality target despite fast completed-example rates.
+Next compare zero-age delayed execution with delay four. Both permit eight examples in flight. The zero-age gate discards many hidden gradients, which reduces work but can weaken learning. Delay four accepts more hidden updates and usually gives a better accuracy trajectory in the recorded comparisons. Point out that the output layer still updates for every example.
 
-Do not equate tau=0/I=8 with synchronous tau=0/I=1. Do not call a queue-pop timer CPU utilization or claim delay four is universally optimal. Explain that rejection skips hidden computation and changes the learning stream.
+Finally, show delay eight. Its bound exceeds the largest reachable age for this eight-example FIFO pipeline, so all hidden updates are accepted. Compare its elapsed time against sequential training rather than assuming two workers must be faster.
+
+Use the report figures to compare complete curves, final accuracy, hidden acceptance, and the first 90% checkpoint. Timings and asynchronous acceptance counts may change on another run. The worker input-pop durations describe elapsed queue calls, not CPU usage.

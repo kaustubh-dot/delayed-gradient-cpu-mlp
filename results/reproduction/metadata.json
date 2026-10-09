@@ -1,0 +1,252 @@
+{
+  "captured_utc": "2026-10-09T09:26:39.529813+00:00",
+  "cpu": "12th Gen Intel(R) Core(TM) i5-12450H",
+  "logical_processors": 12,
+  "os": "Windows-11-10.0.26300-SP0",
+  "compiler": "g++.exe (Rev9, Built by MSYS2 project) 15.2.0",
+  "build_flags": "-O2 -std=c++17 -pthread -Wall -Wextra -Wpedantic",
+  "source_sha256": {
+    "bounded_queue.h": "f5f43ba05ac5f121c5e3f4920b22df1755c2273d65e03b1b811d8eb6d2da93e2",
+    "dense_layer.cpp": "834d0efd57c6a05394d54ca5161cfefb87a1e2ed77a44c748eef25f1b890549e",
+    "dense_layer.h": "fd073dcb565043134e55b44275a1c0f2071e42ef938411429fd825510eedb01c",
+    "main.cpp": "32d91168eec2bd10fc71c693743c82fd5dcab96810d6e84953795a1b33de5ddb",
+    "messages.h": "6369c2683fe74cb055d2c06a9ea3abe89cb58be57e64ad5fd7368b64c830526d",
+    "mnist.cpp": "664f34b726ac10daf2ff42d8674e8c8596774b976d24a6664ea27a04c313392c",
+    "mnist.h": "e5fa984ac2033afce927d02573b33e506479a12e7a8e5593a1a042453d418453",
+    "sequential_baseline.cpp": "0c38d483c6ebb30f57d890fed05e5816c4b84b706d51bd7882d50664dd0e291a",
+    "worker.cpp": "636beb41bb3f818fdac2d7b67e975ee908a9112e4a0aabefc8f5e42e7feeb8ad",
+    "worker.h": "3e0f2893b02704b6f74e6f3c75e74e279b702014f4310b07a115d6e1bb05c453"
+  },
+  "binary_sha256": {
+    "sequential_baseline.exe": "23698a48e413a5aee88a0a94e22669df0a8fcbd929975d50e27613fd879c3149",
+    "mnist_reader.exe": "50cbe1bd0209bf05b6215f13ffff6d75af4bb903d6ede76b17d6ead48e8f0940"
+  },
+  "dataset_sha256": {
+    "t10k-images.idx3-ubyte": "0fa7898d509279e482958e8ce81c8e77db3f2f8254e26661ceb7762c4d494ce7",
+    "t10k-labels.idx1-ubyte": "ff7bcfd416de33731a308c3f266cc351222c34898ecbeaf847f06e48f7ec33f2",
+    "train-images.idx3-ubyte": "ba891046e6505d7aadcbbe25680a0738ad16aec93bde7f9b65e87a2fc25776db",
+    "train-labels.idx1-ubyte": "65a50cbbf4e906d70832878ad85ccda5333a97f0f4c3dd2ef09a8a9eef7101c5"
+  },
+  "subset": "shuffle all training indices and select 5000; then shuffle all test indices and select 1000, using one persistent mt19937(12345); reshuffle selected training indices each epoch",
+  "seed": 12345,
+  "learning_rate": 0.01,
+  "epochs": 5,
+  "repetitions": 3,
+  "order_seed": 20261009,
+  "timing": "sum of epoch training windows; excludes loading, initialization, evaluation, shuffling and final shutdown",
+  "worker_pop_timing": "complete input pop call across worker lifetime; includes lock, condition-variable wait and removal; can include evaluation gaps; not CPU utilization",
+  "affinity": "not set by the experiment",
+  "background_load": "not controlled or measured",
+  "commands": [
+    {
+      "run": "delayed_tau2_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "2",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau4_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "4",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "sequential_tau0_window1_run1",
+      "executable": "sequential_baseline.exe",
+      "arguments": [
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau0_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "synchronous_tau0_window1_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "1",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau16_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "16",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau8_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "8",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau1_window8_run1",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "1",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau2_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "2",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau4_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "4",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau0_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau1_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "1",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "sequential_tau0_window1_run2",
+      "executable": "sequential_baseline.exe",
+      "arguments": [
+        "5"
+      ]
+    },
+    {
+      "run": "synchronous_tau0_window1_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "1",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau8_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "8",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau16_window8_run2",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "16",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "sequential_tau0_window1_run3",
+      "executable": "sequential_baseline.exe",
+      "arguments": [
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau4_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "4",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "synchronous_tau0_window1_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "1",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau1_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "1",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau16_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "16",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau8_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "8",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau0_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "0",
+        "8",
+        "5"
+      ]
+    },
+    {
+      "run": "delayed_tau2_window8_run3",
+      "executable": "mnist_reader.exe",
+      "arguments": [
+        "2",
+        "8",
+        "5"
+      ]
+    }
+  ]
+}

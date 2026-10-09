@@ -1,0 +1,355 @@
+
+=== repetition 1, mode sequential ===
+Implementation: sequential DenseLayer model
+Training examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.26582 seconds
+Training throughput: 797.98 examples/second
+Hidden-layer updates: 5000
+Output-layer updates: 5000
+
+=== repetition 1, mode synchronous ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 1
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 0
+Average age of accepted gradients: 0
+Maximum observed gradient age: 0
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.2234 seconds
+Completed-example rate: 803.419 examples/second
+Worker 0 update rate: 803.419 updates/second
+Worker 1 update rate: 803.419 updates/second
+
+=== repetition 1, mode delayed_tau8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 6.60146 seconds
+Completed-example rate: 757.408 examples/second
+Worker 0 update rate: 757.408 updates/second
+Worker 1 update rate: 757.408 updates/second
+
+=== repetition 2, mode synchronous ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 1
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 0
+Average age of accepted gradients: 0
+Maximum observed gradient age: 0
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.2855 seconds
+Completed-example rate: 795.481 examples/second
+Worker 0 update rate: 795.481 updates/second
+Worker 1 update rate: 795.481 updates/second
+
+=== repetition 2, mode delayed_tau8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.96124 seconds
+Completed-example rate: 838.752 examples/second
+Worker 0 update rate: 838.752 updates/second
+Worker 1 update rate: 838.752 updates/second
+
+=== repetition 2, mode sequential ===
+Implementation: sequential DenseLayer model
+Training examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 5.91071 seconds
+Training throughput: 845.923 examples/second
+Hidden-layer updates: 5000
+Output-layer updates: 5000
+
+=== repetition 3, mode delayed_tau8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.91218 seconds
+Completed-example rate: 845.712 examples/second
+Worker 0 update rate: 845.712 updates/second
+Worker 1 update rate: 845.712 updates/second
+
+=== repetition 3, mode sequential ===
+Implementation: sequential DenseLayer model
+Training examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 5.90397 seconds
+Training throughput: 846.888 examples/second
+Hidden-layer updates: 5000
+Output-layer updates: 5000
+
+=== repetition 3, mode synchronous ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 1
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 0
+Average age of accepted gradients: 0
+Maximum observed gradient age: 0
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.41093 seconds
+Completed-example rate: 779.918 examples/second
+Worker 0 update rate: 779.918 updates/second
+Worker 1 update rate: 779.918 updates/second
+
+=== repetition 4, mode sequential ===
+Implementation: sequential DenseLayer model
+Training examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.48884 seconds
+Training throughput: 770.554 examples/second
+Hidden-layer updates: 5000
+Output-layer updates: 5000
+
+=== repetition 4, mode delayed_tau8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 6.27808 seconds
+Completed-example rate: 796.421 examples/second
+Worker 0 update rate: 796.421 updates/second
+Worker 1 update rate: 796.421 updates/second
+
+=== repetition 4, mode synchronous ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 1
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 0
+Average age of accepted gradients: 0
+Maximum observed gradient age: 0
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.79463 seconds
+Completed-example rate: 735.876 examples/second
+Worker 0 update rate: 735.876 updates/second
+Worker 1 update rate: 735.876 updates/second
+
+=== repetition 5, mode synchronous ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 1
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 0
+Average age of accepted gradients: 0
+Maximum observed gradient age: 0
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 6.49182 seconds
+Completed-example rate: 770.201 examples/second
+Worker 0 update rate: 770.201 updates/second
+Worker 1 update rate: 770.201 updates/second
+
+=== repetition 5, mode sequential ===
+Implementation: sequential DenseLayer model
+Training examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.621308
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.39213
+Test accuracy after training: 88.5%
+Training time: 5.66736 seconds
+Training throughput: 882.245 examples/second
+Hidden-layer updates: 5000
+Output-layer updates: 5000
+
+=== repetition 5, mode delayed_tau8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.34842 seconds
+Completed-example rate: 934.856 examples/second
+Worker 0 update rate: 934.856 updates/second
+Worker 1 update rate: 934.856 updates/second

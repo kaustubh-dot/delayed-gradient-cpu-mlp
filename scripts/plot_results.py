@@ -31,7 +31,7 @@ def save(fig,name):
         fig.savefig(FIG/(name+'.'+suffix),dpi=300,bbox_inches='tight',pad_inches=.08)
     plt.close(fig)
 
-def learning(rows,name,fresh=False):
+def learning(rows,name):
     fig, axes=plt.subplots(1,2,figsize=(7.25,3.25))
     groups=defaultdict(list)
     for r in rows:groups[key(r)].append(r)
@@ -68,7 +68,7 @@ def comparison(rows,name):
 
 def targets(old,fresh):
     fig,axes=plt.subplots(1,2,figsize=(7.25,2.9))
-    for ax,rows,title in zip(axes,[old,fresh],['(a) Supplied measurements','(b) Fresh reconstruction']):
+    for ax,rows,title in zip(axes,[old,fresh],['(a) Recorded five-epoch runs','(b) New five-epoch runs']):
         labels=[]
         for i,t in enumerate([0,1,2,4,8,16] if rows is fresh else [0,1,2,4,8]):
             subset=[r for r in rows if r['configuration']=='delayed' and r['tau_max']==str(t)]
@@ -77,6 +77,9 @@ def targets(old,fresh):
             if vals:
                 ax.scatter([i]*len(vals),vals,color=COLORS[2+i],s=25,marker='o')
                 ax.plot([i-.18,i+.18],[mean(vals)]*2,color='black',lw=1)
+                if len(vals) < len(subset):
+                    ax.annotate(f'{len(vals)}/{len(subset)} reached', (i,mean(vals)),
+                                xytext=(0,8), textcoords='offset points', ha='center', fontsize=7)
             else:ax.text(i,.03,'NR',transform=ax.get_xaxis_transform(),ha='center',fontsize=8)
         ax.set_xticks(range(len(labels)),labels);ax.set_xlabel('Delay bound');ax.set_ylabel('First >=90% checkpoint (s)');ax.set_title(title,fontsize=10);ax.set_ylim(bottom=0)
     fig.tight_layout(pad=1);save(fig,'time_to_target')
@@ -97,15 +100,15 @@ def architecture():
         ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.05,rounding_size=.05',edgecolor='#272727',facecolor=color,lw=1))
         ax.text(x+w/2,y+h/2,text,ha='center',va='center',fontsize=9)
     box(.1,1.15,1.75,1.2,'Coordinator\nwindow I\nepoch drain','#eeeeee')
-    box(2.4,1.15,1.45,1.2,'Mixed inbox\nTrain / Grad\ncapacity 2I','#DDF3DE')
-    box(4.3,1.15,1.8,1.2,'Worker 0\n784 -> 32\nsole hidden owner\ncache: index / h','#d8e8fa')
+    box(2.4,1.15,1.45,1.2,'Mixed inbox\nTrain / Grad\ncapacity I','#DDF3DE')
+    box(4.3,1.15,1.8,1.2,'Worker 0\n784 -> 32\nsole hidden owner\ncache: input x','#d8e8fa')
     box(7.85,1.15,1.95,1.2,'Worker 1\n32 -> 10\nsole output owner','#F6CFCB')
     ax.annotate('',xy=(2.35,1.75),xytext=(1.9,1.75),arrowprops={'arrowstyle':'->','color':'black'})
     ax.annotate('',xy=(4.25,1.75),xytext=(3.9,1.75),arrowprops={'arrowstyle':'->','color':'black'})
     ax.annotate('',xy=(7.8,2),xytext=(6.15,2),arrowprops={'arrowstyle':'->','color':'#0F4D92'})
     ax.text(6.98,2.18,'Activation queue\n(id, h, origin)',ha='center',fontsize=8)
     ax.annotate('',xy=(3.15,2.43),xytext=(8.8,2.43),arrowprops={'arrowstyle':'->','connectionstyle':'arc3,rad=.23','color':'#B64342'})
-    ax.text(6.3,3.36,'Real gradient returns to hidden inbox',ha='center',fontsize=9,color='#B64342')
+    ax.text(6.3,3.36,'Downstream derivative returns to hidden inbox',ha='center',fontsize=9,color='#B64342')
     ax.annotate('',xy=(1,.95),xytext=(5.2,.95),arrowprops={'arrowstyle':'->','connectionstyle':'arc3,rad=-.13','color':'#767676'})
     ax.text(3.3,.3,'Result queue: completion after apply or discard',ha='center',fontsize=9)
     fig.tight_layout(pad=.5);save(fig,'architecture')
@@ -130,12 +133,13 @@ def aggregates(rows):
         rec={'n':len(v)}
         for metric in ['total_training_seconds','hidden_update_acceptance_percent','final_test_accuracy_percent','time_to_90_percent_seconds']:
             vals=[float(r[metric]) for r in v if r[metric] not in ['NA','']]
-            rec[metric]={'mean':mean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'n_reached':len(vals)}
+            rec[metric]={'mean':mean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,
+                         'n_reached' if metric=='time_to_90_percent_seconds' else 'n':len(vals)}
         stats['/'.join(k)]=rec
     return stats
 
 def tables(old,fresh):
-    for name,rows in [('supplied',old),('fresh',fresh)]:
+    for name,rows in [('recorded',old),('reproduction',fresh)]:
         stats=aggregates(rows);lines=[]
         for k,label in zip(KEYS,LABELS):
             s=stats.get('/'.join(k))
@@ -145,15 +149,18 @@ def tables(old,fresh):
             lines.append(f"{label} & {s['n']} & {f('total_training_seconds'):.3f} & {f('final_test_accuracy_percent'):.2f} & {f('hidden_update_acceptance_percent'):.2f} & "+(f'{target:.3f}' if target is not None else 'NR')+r' \\')
         header = r'\begin{tabular}{lrrrrr}\toprule' + '\n' + r'Setting & $n$ & Time (s) & Acc. (\%) & Accept (\%) & $T_{90}$ (s)\\\midrule' + '\n'
         (ROOT/'report'/f'{name}_table.tex').write_text(header+'\n'.join(lines)+'\n'+r'\bottomrule\end{tabular}'+'\n',encoding='utf-8')
-    (ROOT/'results/derived/summary_statistics.json').write_text(json.dumps({'supplied':aggregates(old),'fresh':aggregates(fresh)},indent=2),encoding='utf-8')
+    (ROOT/'results/summary/summary_statistics.json').write_text(json.dumps({'recorded':aggregates(old),'reproduction':aggregates(fresh)},indent=2),encoding='utf-8')
 
 def main():
     FIG.mkdir(exist_ok=True)
-    old=read('results/supplied/epoch_curves.csv');new=read('results/fresh/epoch_curves.csv')
-    oc=read('results/supplied/epoch_comparison.csv');nc=read('results/fresh/comparison.csv')
-    learning(old,'supplied_learning');learning(new,'fresh_learning',True)
-    comparison(oc,'supplied_tradeoff');comparison(nc,'fresh_tradeoff')
-    targets(oc,nc);timing(read('results/derived/instrumented_comparison.csv'),'supplied_worker_timing')
+    (ROOT/'results/summary').mkdir(exist_ok=True)
+    from check_results import extract_worker_timing
+    extract_worker_timing()
+    old=read('results/recorded/epoch_curves.csv');new=read('results/reproduction/epoch_curves.csv')
+    oc=read('results/recorded/comparison.csv');nc=read('results/reproduction/comparison.csv')
+    learning(old,'recorded_learning');learning(new,'reproduction_learning')
+    comparison(oc,'recorded_tradeoff');comparison(nc,'reproduction_tradeoff')
+    targets(oc,nc);timing(read('results/summary/instrumented_comparison.csv'),'recorded_worker_timing')
     architecture();staleness();tables(oc,nc)
     print('Eight publication figures exported as PDF, SVG, and 300 dpi PNG; tables and descriptive summaries generated')
 

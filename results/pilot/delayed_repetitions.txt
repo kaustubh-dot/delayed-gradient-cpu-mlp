@@ -1,0 +1,810 @@
+
+=== repetition 1, tau_max=0 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 1.11172
+Worker 0 accepted updates: 625
+Worker 0 discarded gradients: 4375
+Worker 0 update acceptance: 12.5%
+Worker 1 updates: 5000
+Average age of all gradients: 0.875
+Average age of accepted gradients: 0
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.517618
+Test accuracy after training: 84.2%
+Training time: 1.89414 seconds
+Completed-example rate: 2639.72 examples/second
+Worker 0 update rate: 329.966 updates/second
+Worker 1 update rate: 2639.72 updates/second
+
+=== repetition 1, tau_max=1 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 1
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.817445
+Worker 0 accepted updates: 1845
+Worker 0 discarded gradients: 3155
+Worker 0 update acceptance: 36.9%
+Worker 1 updates: 5000
+Average age of all gradients: 1.6248
+Average age of accepted gradients: 0.983198
+Maximum observed gradient age: 2
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.446923
+Test accuracy after training: 86.4%
+Training time: 2.64425 seconds
+Completed-example rate: 1890.89 examples/second
+Worker 0 update rate: 697.74 updates/second
+Worker 1 update rate: 1890.89 updates/second
+
+=== repetition 1, tau_max=2 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 2
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.774468
+Worker 0 accepted updates: 2803
+Worker 0 discarded gradients: 2197
+Worker 0 update acceptance: 56.06%
+Worker 1 updates: 5000
+Average age of all gradients: 2.3422
+Average age of accepted gradients: 1.82661
+Maximum observed gradient age: 3
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.446502
+Test accuracy after training: 87.1%
+Training time: 3.43996 seconds
+Completed-example rate: 1453.51 examples/second
+Worker 0 update rate: 814.836 updates/second
+Worker 1 update rate: 1453.51 updates/second
+
+=== repetition 1, tau_max=4 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 4
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.692125
+Worker 0 accepted updates: 3125
+Worker 0 discarded gradients: 1875
+Worker 0 update acceptance: 62.5%
+Worker 1 updates: 5000
+Average age of all gradients: 3.125
+Average age of accepted gradients: 2
+Maximum observed gradient age: 5
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.43149
+Test accuracy after training: 87.2%
+Training time: 3.84622 seconds
+Completed-example rate: 1299.98 examples/second
+Worker 0 update rate: 812.485 updates/second
+Worker 1 update rate: 1299.98 updates/second
+
+=== repetition 1, tau_max=8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.39334 seconds
+Completed-example rate: 927.069 examples/second
+Worker 0 update rate: 927.069 updates/second
+Worker 1 update rate: 927.069 updates/second
+
+=== repetition 1, tau_max=16 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 16
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.33297 seconds
+Completed-example rate: 937.565 examples/second
+Worker 0 update rate: 937.565 updates/second
+Worker 1 update rate: 937.565 updates/second
+
+=== repetition 2, tau_max=0 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 1.11172
+Worker 0 accepted updates: 625
+Worker 0 discarded gradients: 4375
+Worker 0 update acceptance: 12.5%
+Worker 1 updates: 5000
+Average age of all gradients: 0.875
+Average age of accepted gradients: 0
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.517618
+Test accuracy after training: 84.2%
+Training time: 1.71388 seconds
+Completed-example rate: 2917.35 examples/second
+Worker 0 update rate: 364.669 updates/second
+Worker 1 update rate: 2917.35 updates/second
+
+=== repetition 2, tau_max=1 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 1
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.890829
+Worker 0 accepted updates: 1503
+Worker 0 discarded gradients: 3497
+Worker 0 update acceptance: 30.06%
+Worker 1 updates: 5000
+Average age of all gradients: 1.6248
+Average age of accepted gradients: 0.75183
+Maximum observed gradient age: 2
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.442437
+Test accuracy after training: 86.4%
+Training time: 2.41286 seconds
+Completed-example rate: 2072.23 examples/second
+Worker 0 update rate: 622.912 updates/second
+Worker 1 update rate: 2072.23 updates/second
+
+=== repetition 2, tau_max=2 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 2
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.793091
+Worker 0 accepted updates: 2082
+Worker 0 discarded gradients: 2918
+Worker 0 update acceptance: 41.64%
+Worker 1 updates: 5000
+Average age of all gradients: 2.2498
+Average age of accepted gradients: 1.19837
+Maximum observed gradient age: 3
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.433902
+Test accuracy after training: 87.2%
+Training time: 2.98811 seconds
+Completed-example rate: 1673.3 examples/second
+Worker 0 update rate: 696.762 updates/second
+Worker 1 update rate: 1673.3 updates/second
+
+=== repetition 2, tau_max=4 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 4
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.692125
+Worker 0 accepted updates: 3125
+Worker 0 discarded gradients: 1875
+Worker 0 update acceptance: 62.5%
+Worker 1 updates: 5000
+Average age of all gradients: 3.125
+Average age of accepted gradients: 2
+Maximum observed gradient age: 5
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.43149
+Test accuracy after training: 87.2%
+Training time: 4.08913 seconds
+Completed-example rate: 1222.75 examples/second
+Worker 0 update rate: 764.221 updates/second
+Worker 1 update rate: 1222.75 updates/second
+
+=== repetition 2, tau_max=8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.3875 seconds
+Completed-example rate: 928.074 examples/second
+Worker 0 update rate: 928.074 updates/second
+Worker 1 update rate: 928.074 updates/second
+
+=== repetition 2, tau_max=16 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 16
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.35579 seconds
+Completed-example rate: 933.569 examples/second
+Worker 0 update rate: 933.569 updates/second
+Worker 1 update rate: 933.569 updates/second
+
+=== repetition 3, tau_max=0 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 1.11172
+Worker 0 accepted updates: 625
+Worker 0 discarded gradients: 4375
+Worker 0 update acceptance: 12.5%
+Worker 1 updates: 5000
+Average age of all gradients: 0.875
+Average age of accepted gradients: 0
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.517618
+Test accuracy after training: 84.2%
+Training time: 1.89002 seconds
+Completed-example rate: 2645.48 examples/second
+Worker 0 update rate: 330.685 updates/second
+Worker 1 update rate: 2645.48 updates/second
+
+=== repetition 3, tau_max=1 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 1
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.888655
+Worker 0 accepted updates: 1609
+Worker 0 discarded gradients: 3391
+Worker 0 update acceptance: 32.18%
+Worker 1 updates: 5000
+Average age of all gradients: 1.6248
+Average age of accepted gradients: 0.834058
+Maximum observed gradient age: 2
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.464942
+Test accuracy after training: 84.9%
+Training time: 2.45211 seconds
+Completed-example rate: 2039.06 examples/second
+Worker 0 update rate: 656.171 updates/second
+Worker 1 update rate: 2039.06 updates/second
+
+=== repetition 3, tau_max=2 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 2
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.791385
+Worker 0 accepted updates: 1875
+Worker 0 discarded gradients: 3125
+Worker 0 update acceptance: 37.5%
+Worker 1 updates: 5000
+Average age of all gradients: 2.25
+Average age of accepted gradients: 1
+Maximum observed gradient age: 3
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.440971
+Test accuracy after training: 87.1%
+Training time: 2.65159 seconds
+Completed-example rate: 1885.66 examples/second
+Worker 0 update rate: 707.123 updates/second
+Worker 1 update rate: 1885.66 updates/second
+
+=== repetition 3, tau_max=4 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 4
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.692125
+Worker 0 accepted updates: 3125
+Worker 0 discarded gradients: 1875
+Worker 0 update acceptance: 62.5%
+Worker 1 updates: 5000
+Average age of all gradients: 3.125
+Average age of accepted gradients: 2
+Maximum observed gradient age: 5
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.43149
+Test accuracy after training: 87.2%
+Training time: 3.72934 seconds
+Completed-example rate: 1340.72 examples/second
+Worker 0 update rate: 837.95 updates/second
+Worker 1 update rate: 1340.72 updates/second
+
+=== repetition 3, tau_max=8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.623298
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.414956
+Test accuracy after training: 87.9%
+Training time: 5.59169 seconds
+Completed-example rate: 894.183 examples/second
+Worker 0 update rate: 894.183 updates/second
+Worker 1 update rate: 894.183 updates/second
+
+=== repetition 3, tau_max=16 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 16
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.30999 seconds
+Completed-example rate: 941.621 examples/second
+Worker 0 update rate: 941.621 updates/second
+Worker 1 update rate: 941.621 updates/second
+
+=== repetition 4, tau_max=0 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 1.11172
+Worker 0 accepted updates: 625
+Worker 0 discarded gradients: 4375
+Worker 0 update acceptance: 12.5%
+Worker 1 updates: 5000
+Average age of all gradients: 0.875
+Average age of accepted gradients: 0
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.517618
+Test accuracy after training: 84.2%
+Training time: 1.67038 seconds
+Completed-example rate: 2993.33 examples/second
+Worker 0 update rate: 374.166 updates/second
+Worker 1 update rate: 2993.33 updates/second
+
+=== repetition 4, tau_max=1 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 1
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.886979
+Worker 0 accepted updates: 1260
+Worker 0 discarded gradients: 3740
+Worker 0 update acceptance: 25.2%
+Worker 1 updates: 5000
+Average age of all gradients: 1.6248
+Average age of accepted gradients: 0.511111
+Maximum observed gradient age: 2
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.479065
+Test accuracy after training: 84.9%
+Training time: 2.1564 seconds
+Completed-example rate: 2318.68 examples/second
+Worker 0 update rate: 584.308 updates/second
+Worker 1 update rate: 2318.68 updates/second
+
+=== repetition 4, tau_max=2 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 2
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.791385
+Worker 0 accepted updates: 1875
+Worker 0 discarded gradients: 3125
+Worker 0 update acceptance: 37.5%
+Worker 1 updates: 5000
+Average age of all gradients: 2.25
+Average age of accepted gradients: 1
+Maximum observed gradient age: 3
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.440971
+Test accuracy after training: 87.1%
+Training time: 2.65974 seconds
+Completed-example rate: 1879.89 examples/second
+Worker 0 update rate: 704.957 updates/second
+Worker 1 update rate: 1879.89 updates/second
+
+=== repetition 4, tau_max=4 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 4
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.692125
+Worker 0 accepted updates: 3125
+Worker 0 discarded gradients: 1875
+Worker 0 update acceptance: 62.5%
+Worker 1 updates: 5000
+Average age of all gradients: 3.125
+Average age of accepted gradients: 2
+Maximum observed gradient age: 5
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.43149
+Test accuracy after training: 87.2%
+Training time: 3.77483 seconds
+Completed-example rate: 1324.56 examples/second
+Worker 0 update rate: 827.852 updates/second
+Worker 1 update rate: 1324.56 updates/second
+
+=== repetition 4, tau_max=8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.37932 seconds
+Completed-example rate: 929.485 examples/second
+Worker 0 update rate: 929.485 updates/second
+Worker 1 update rate: 929.485 updates/second
+
+=== repetition 4, tau_max=16 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 16
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.346 seconds
+Completed-example rate: 935.278 examples/second
+Worker 0 update rate: 935.278 updates/second
+Worker 1 update rate: 935.278 updates/second
+
+=== repetition 5, tau_max=0 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 1.11172
+Worker 0 accepted updates: 625
+Worker 0 discarded gradients: 4375
+Worker 0 update acceptance: 12.5%
+Worker 1 updates: 5000
+Average age of all gradients: 0.875
+Average age of accepted gradients: 0
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.517618
+Test accuracy after training: 84.2%
+Training time: 1.71676 seconds
+Completed-example rate: 2912.46 examples/second
+Worker 0 update rate: 364.057 updates/second
+Worker 1 update rate: 2912.46 updates/second
+
+=== repetition 5, tau_max=1 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 1
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.889744
+Worker 0 accepted updates: 1306
+Worker 0 discarded gradients: 3694
+Worker 0 update acceptance: 26.12%
+Worker 1 updates: 5000
+Average age of all gradients: 1.6246
+Average age of accepted gradients: 0.562787
+Maximum observed gradient age: 2
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.498926
+Test accuracy after training: 85.3%
+Training time: 2.19646 seconds
+Completed-example rate: 2276.39 examples/second
+Worker 0 update rate: 594.594 updates/second
+Worker 1 update rate: 2276.39 updates/second
+
+=== repetition 5, tau_max=2 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 2
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.779589
+Worker 0 accepted updates: 2668
+Worker 0 discarded gradients: 2332
+Worker 0 update acceptance: 53.36%
+Worker 1 updates: 5000
+Average age of all gradients: 2.274
+Average age of accepted gradients: 1.63943
+Maximum observed gradient age: 3
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.411726
+Test accuracy after training: 88%
+Training time: 3.41548 seconds
+Completed-example rate: 1463.92 examples/second
+Worker 0 update rate: 781.15 updates/second
+Worker 1 update rate: 1463.92 updates/second
+
+=== repetition 5, tau_max=4 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 4
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.691411
+Worker 0 accepted updates: 3729
+Worker 0 discarded gradients: 1271
+Worker 0 update acceptance: 74.58%
+Worker 1 updates: 5000
+Average age of all gradients: 3.1844
+Average age of accepted gradients: 2.56557
+Maximum observed gradient age: 5
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.437679
+Test accuracy after training: 87.8%
+Training time: 4.39803 seconds
+Completed-example rate: 1136.87 examples/second
+Worker 0 update rate: 847.879 updates/second
+Worker 1 update rate: 1136.87 updates/second
+
+=== repetition 5, tau_max=8 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 8
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622881
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.4996
+Average age of accepted gradients: 3.4996
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.418474
+Test accuracy after training: 87.7%
+Training time: 5.358 seconds
+Completed-example rate: 933.184 examples/second
+Worker 0 update rate: 933.184 updates/second
+Worker 1 update rate: 933.184 updates/second
+
+=== repetition 5, tau_max=16 ===
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 16
+Completed examples: 5000
+Epochs: 1
+Learning rate: 0.01
+Seed: 12345
+Average training loss: 0.622975
+Worker 0 accepted updates: 5000
+Worker 0 discarded gradients: 0
+Worker 0 update acceptance: 100%
+Worker 1 updates: 5000
+Average age of all gradients: 3.5
+Average age of accepted gradients: 3.5
+Maximum observed gradient age: 7
+Test subset size: 1000
+Test loss before training: 2.36732
+Test accuracy before training: 7.2%
+Test loss after training: 0.413119
+Test accuracy after training: 87.8%
+Training time: 5.36976 seconds
+Completed-example rate: 931.141 examples/second
+Worker 0 update rate: 931.141 updates/second
+Worker 1 update rate: 931.141 updates/second

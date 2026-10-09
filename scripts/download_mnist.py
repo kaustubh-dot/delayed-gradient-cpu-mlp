@@ -42,11 +42,11 @@ def download(target):
                 raise RuntimeError('All MNIST mirrors failed') from last_error
         if hashlib.md5(packed.read_bytes()).hexdigest() != expected:
             raise ValueError('MNIST checksum mismatch: ' + name)
-        unpacked = target / name.removesuffix('.gz')
+        unpacked = target / name.removesuffix('.gz').replace('-idx', '.idx')
         unpacked.write_bytes(gzip.decompress(packed.read_bytes()))
         print(name, 'verified', hashlib.sha256(unpacked.read_bytes()).hexdigest(), flush=True)
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--data', type=Path, default=Path('data/mnist'))
+    p.add_argument('--data', type=Path, default=Path('data'))
     download(p.parse_args().data)

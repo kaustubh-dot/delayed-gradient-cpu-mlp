@@ -1,0 +1,38 @@
+epoch,average_training_loss,test_loss,test_accuracy_percent,elapsed_training_seconds
+1,1.051164,0.484365,85.300000,0.217250
+2,0.504695,0.571190,81.000000,0.406041
+3,0.450158,0.656444,79.500000,0.602072
+4,0.415094,0.517885,84.400000,0.799096
+5,0.372440,0.493557,85.800000,0.996562
+Implementation: bounded delayed-gradient model
+Workers: 2
+Maximum batches in flight: 8
+Maximum gradient age: 0
+Training examples per epoch: 5000
+Completed examples: 25000
+Epochs: 5
+Learning rate: 0.010000
+Seed: 12345
+Average training loss: 0.558710
+Worker 0 accepted updates: 3179
+Worker 0 discarded gradients: 21821
+Worker 0 update acceptance: 12.716000%
+Worker 1 updates: 25000
+Average age of all gradients: 0.872840
+Average age of accepted gradients: 0.000000
+Maximum observed gradient age: 1
+Test subset size: 1000
+Test loss before training: 2.367320
+Test accuracy before training: 7.200000%
+Test loss after training: 0.493557
+Test accuracy after training: 85.800000%
+Total training time: 0.996562 seconds
+Completed-example rate: 25086.251550 examples/second
+Worker 0 update rate: 3189.967747 updates/second
+Worker 1 update rate: 25086.251550 updates/second
+Worker 0 processed batches: 25000
+Worker 0 active-path time (processing and queue pushes): 0.897263 seconds
+Worker 0 input-queue wait time: 0.196834 seconds
+Worker 1 processed batches: 25000
+Worker 1 active-path time (processing and queue pushes): 0.091242 seconds
+Worker 1 input-queue wait time: 1.001601 seconds
